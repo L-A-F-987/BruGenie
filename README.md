@@ -1,6 +1,6 @@
 # BruGenie "Coffee any way you wish" 
 
-![alt text](https://github.com/L-A-F-987/BruGenie/blob/main/BruGenie_logo_round.jpg|width=10)
+![alt text](https://github.com/L-A-F-987/BruGenie/blob/main/BruGenie_logo_round.jpg)
 
 Project to develop a coffee machine which can fill any mug to the perfect level every time.
 
