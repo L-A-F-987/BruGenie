@@ -19,7 +19,7 @@
 #ifndef VL53L4CD_CALIBRATION_H_
 #define VL53L4CD_CALIBRATION_H_
 
-#include "platform.h"
+#include "../platform/platform.h"
 
 /**
  * @brief This function can be used to perform an offset calibration. Offset

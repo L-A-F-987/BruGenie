@@ -24,7 +24,7 @@
 
 #include "platform.h"
 #include "types.h"
-#include "VL53L4CD_api.h"
+#include "../uld-driver/VL53L4CD_api.h"
 
 #define VL53L4CD_ERROR_GPIO_SET_FAIL	1
 #define VL53L4CD_COMMS_ERROR		2
@@ -66,7 +66,7 @@ uint8_t VL53L4CD_comms_init(Dev_t dev)
 	LOG("User space com init\n");
 
 	/* Create sensor at default I2C address */
-	dev->address = 0x29;
+	dev->address = 0x52;
 	dev->fd = open("/dev/i2c-1", O_RDONLY);
 	if (dev->fd == -1) {
 		LOG("Failed to open /dev/i2c-1\n");
@@ -282,7 +282,15 @@ uint8_t VL53L4CD_IsDataReady(Dev_t dev)
 }
 
 uint8_t VL53L4CD_IsDataReady_Ready_Interrupt_Based(Dev_t dev)
-{
+{	
+	//int running = 1;
 
+	//pin
+	//while(running){
+		//const struct timespec ts = (1,0);
+		//gpiod_line_event_wait(, &ts);
+	
+	//}
+		
 	return 1;
 }

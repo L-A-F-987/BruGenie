@@ -18,9 +18,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "VL53L4CD_api.h"
+#include "../uld-driver/VL53L4CD_api.h"
 
-#include "examples.h"
+#include "../examples/examples.h"
 
 int exit_main_loop = 0;
 

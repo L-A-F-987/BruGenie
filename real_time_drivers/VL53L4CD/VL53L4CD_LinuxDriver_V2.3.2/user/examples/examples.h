@@ -14,7 +14,7 @@
 #ifndef EXAMPLES_H_
 #define EXAMPLES_H_
 
-#include "platform.h"
+#include "../platform/platform.h"
 
 int example1(Dev_t dev);
 int example2(Dev_t dev);

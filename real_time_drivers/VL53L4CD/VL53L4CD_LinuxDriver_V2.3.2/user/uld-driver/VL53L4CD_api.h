@@ -14,7 +14,7 @@
 #ifndef VL53L4CD_API_H_
 #define VL53L4CD_API_H_
 
-#include "platform.h"
+#include "../platform/platform.h"
 
 /**
  *  @brief Driver version

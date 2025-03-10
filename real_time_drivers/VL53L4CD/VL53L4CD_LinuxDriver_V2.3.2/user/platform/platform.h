@@ -17,6 +17,10 @@
 #include <stdint.h>
 #include <string.h>
 
+//Defining the interrupt pin for callback 
+#define Default_interrupt_pin 8
+
+
 typedef struct {
 	int      fd;    	/* File descriptor */
 	uint16_t  address;    	/* I2C address of sensor */
