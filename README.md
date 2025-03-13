@@ -1,62 +1,45 @@
-<<<<<<< HEAD
-# BruGenie "Coffee any way you wish" 
-
-<img width="557" alt="image" src="https://github.com/L-A-F-987/BruGenie/blob/main/BruGenie_logo_round.jpg">
-
-Project to develop a coffee machine which can fill any mug to the perfect level every time.
-
-- Measures the coffee cup volume in real time using two mobile ultrasound sensors
-- Dispenses both coffee and milk in the a ratio provided by the user calculated for each mug
-
-# Building and Make Files
-
-## This project is designed to allow for building using cmake (min version 3.07). Following the below instructions will allow for the build.
-
-- cd file_location
-- cmake . 
-- make
-
-### This will create x folders each containing executables:
-
-- x
-- y
-
-### Additionally to this there are a series of software tests which can be ran using the following command:
-
-- make test 
-
-# Contact Details 
-
-- Company Email: c0ffee.embedded@gmail.com
-
-
- 
-=======
 # BruGenie - "Coffee Anyway You Wish"
 
-<img width="275" alt="image" src="https://github.com/user-attachments/assets/e5be9778-61db-4848-8f4d-f0941952f0f3">
+<img width="400" alt="image" src="Images/Bru Genie Logos + Margins-03.svg">
 
-This github is dedicated to a real time embedded systems project to develop a real-time coffee machine which can measure the volume of mugs to ensure the mug is always filled to the correct level and that the milk to coffee ratio isalways the same regardless of cup volume.
+This GitHub repository showcases a real-time embedded systems project focused on developing a smart coffee machine. The machine measures mug volume to ensure each cup is filled to the perfect level, maintaining a consistent milk-to-coffee ratio regardless of cup size.
+
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Building](#building)
+- [Social Media Channels](#social-media-channels)
+- [Acknowledgements](#acknowledgements)
+- [Authors](#authors)
 
 ## Prerequisites
+### Microcontroller
 
-To use this library there are two sets of requirements software and hardware each of which are listed below.
+- Rasberry PI 5
 
-### Hardware
+### Sensors
 
-- 2 x I2C Ultrasond Sensors
-- 1 x Temperature Sensor
-- 1 x Weight Sensor
+- 2 × VL53L4CD – Time-of-Flight Sensors
+- 1 × DS18B20 – Temperature Sensor
+- 1 × TE Connectivity – Load Cell
+- 1 × ADS1115 – 16-Bit ADC
+- 1 × Parallax Inc Servo Motor – 4–6V, 50 RPM, 27 N·cm Max Output Torque
 
-### Software
+### Additional Components
+
+- 1 × PTC Heating Element
+- 1 × 10mm Lead Screw
+- 1 × Igus Flanged Round Nut – 10mm
+- 1 × Russell Hobbs Coffee Machine
+
+### Libraries
 
 ```
-apt-get 
+apt-get install cmake
 ```
 
 ## Building 
 The following commands can be executed to build the exectuables. This requires CMake version 3.07 or greater.
-
 
 ```
 cmake .
@@ -71,9 +54,27 @@ To execute the sofrtware tests run the following command after building.
 ```
 make test
 ```
+## Social Media Channels
 
+- [Instagram](https://www.instagram.com/brugenie/?locale=en_GB&hl=en)
+- [Tiktok](https://www.tiktok.com/@brugenie)
+- [Youtube](https://www.youtube.com/channel/UCvZ_YEZ7hOzSlOggeiQ_5xw) 
 
+## Acknowledgements
 
->>>>>>> 4d75bfacf6045a609200755a58b0959ba36ff226
+Thank you to Bernd Porr for providing us with the opportunity to work on this project and for supervising us throughout. We’d also like to extend our gratitude to RS Components for funding our project — their contribution helped bring our idea to life.
 
+## Authors
 
+- Luca Faccenda
+- Manaf Habeeb 
+- Tanvi Kapil
+- Taniya Jose
+- Maarven Pathmanabhan 
+
+## Contact Us
+
+Company Email: c0ffee.embedded@gmail.com
+
+## Last Updated
+This README was last updated on 13/03/2025.
