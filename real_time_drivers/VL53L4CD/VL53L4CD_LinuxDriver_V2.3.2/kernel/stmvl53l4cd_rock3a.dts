@@ -1,0 +1,30 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+        metadata {
+                title = "Enable vl53l4cd on rock3a";
+                compatible = "rockchip,rk3568";
+                category = "dtof sensor";
+                description = "Enable Radxa rock-3a vl53l4cd";
+        };
+
+        fragment@0 {
+                target = <&i2c1>;
+
+                __overlay__ {
+                        status = "okay";
+                        pinctrl-names = "default";
+                        pinctrl-0 = <&i2c1_xfer>;
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        stmvl53l4cd: stmvl53l4cd@29 {
+                                compatible = "st,stmvl53l4cd";
+                                reg = <0x29>;
+                                pwr-gpios = <&gpio3 5 0>;
+                                irq-gpios = <&gpio3 6 2>;
+                                status = "okay";
+                        };
+                };
+        };
+};

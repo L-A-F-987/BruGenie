@@ -1,20 +1,19 @@
 cmake_minimum_required(VERSION 3.10)
-project(EXAMPLE LANGUAGES CXX)
-
+project(BruGenie LANGUAGES CXX)
 
 
 enable_testing()
 
-add_subdirectory(Non_Project_Examples)
+add_subdirectory(Initial_Framework)
 
 
-add_library(Hello_Team STATIC
-        Non_Project_Examples/example_cpp_file/Hello_Team.cpp
+add_library(Framework STATIC
+        Initial_Framework/Framework_code/Ultrasound_Sensors.cpp
         )
 
-target_include_directories(Hello_Team
+target_include_directories(Framework
         PUBLIC
-        eexample_header_files/)
+        header_files/)
 
 
 
