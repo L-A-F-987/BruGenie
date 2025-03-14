@@ -88,7 +88,7 @@ int example1(Dev_t dev)
 	/*         Ranging loop          */
 	/*********************************/
 
-	loop = 0;
+	//loop = 0;
 	VL53L4CD.start_recording_data();
 
 	//status = VL53L4CD.VL53L4CD_StartRanging(dev);

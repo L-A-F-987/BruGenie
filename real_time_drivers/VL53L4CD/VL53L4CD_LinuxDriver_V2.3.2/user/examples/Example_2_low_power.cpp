@@ -33,7 +33,7 @@ int example2(Dev_t dev)
 	/*********************************/
 
 	uint8_t 				status, loop, isReady;
-	uint16_t 				sensor_id;
+	//uint16_t 				sensor_id;
 	VL53L4CD_ResultsData_t 			results;		/* results data from VL53L4CD */
 
 
@@ -55,22 +55,22 @@ int example2(Dev_t dev)
 
 	/* (Optional) Check if there is a VL53L4CD sensor connected */
 	VL53L4CD_API VL53L4CD;
-	status = VL53L4CD.VL53L4CD_GetSensorId(dev, &sensor_id);
-	if(status || (sensor_id != 0xEBAA))
-	{
-		printf("VL53L4CD not detected at requested address\n");
-		return status;
-	}
+	//status = VL53L4CD.VL53L4CD_GetSensorId(dev, &sensor_id);
+	//if(status || (sensor_id != 0xEBAA))
+	//{
+		//printf("VL53L4CD not detected at requested address\n");
+		//return status;
+	//}
 
 	/* (Mandatory) Init VL53L4CD sensor */
-	status = VL53L4CD.VL53L4CD_SensorInit(dev);
-	if(status)
-	{
-		printf("VL53L4CD ULD Loading failed\n");
-		return status;
-	}
+	//status = VL53L4CD.VL53L4CD_SensorInit(dev);
+	//if(status)
+	//{
+		//printf("VL53L4CD ULD Loading failed\n");
+		//return status;
+	//}
 
-	printf("VL53L4CD ULD ready !\n");
+	//printf("VL53L4CD ULD ready !\n");
 
 	/*********************************/
 	/*     Sensor configuration      */
@@ -106,9 +106,13 @@ int example2(Dev_t dev)
 	/*         Ranging loop          */
 	/*********************************/
 
-	status = VL53L4CD.VL53L4CD_StartRanging(dev);
+	//status = VL53L4CD.VL53L4CD_StartRanging(dev);
+	
 
 	loop = 0;
+	VL53L4CD.start_recording_data();
+
+	/*
 	while(loop < 200)
 	{
 		/* Use polling function to know when a new measurement is ready.
@@ -116,14 +120,16 @@ int example2(Dev_t dev)
 		 * (GPIO 1) when a new measurement is ready */
  
 		//isReady = VL53L4CD_IsDataReady(dev);
+
+		/* 
 		isReady = 1;
 
 		if(isReady)
 		{
-			/* (Mandatory) Clear HW interrupt to restart measurements */
+			(Mandatory) Clear HW interrupt to restart measurements 
 			VL53L4CD.VL53L4CD_ClearInterrupt(dev);
 
-			/* Read measured distance. RangeStatus = 0 means valid data */
+			 Read measured distance. RangeStatus = 0 means valid data
 			VL53L4CD.VL53L4CD_GetResult(dev, &results);
 			printf("Status = %6u, Distance = %6u, Signal = %6u\n",
 				 results.range_status,
@@ -131,9 +137,12 @@ int example2(Dev_t dev)
 				 results.signal_per_spad_kcps);
 			loop++;
 		}
-	}
+	} */
+	getchar();
+	VL53L4CD.stop_recording_data();
 
-	status = VL53L4CD.VL53L4CD_StopRanging(dev);
+	//status = VL53L4CD.VL53L4CD_StopRanging(dev);
 	printf("End of ULD demo\n");
 	return status;
+
 }

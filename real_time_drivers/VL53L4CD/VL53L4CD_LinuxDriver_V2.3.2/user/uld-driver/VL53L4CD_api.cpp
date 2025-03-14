@@ -437,6 +437,7 @@ VL53L4CD_Error VL53L4CD_API::VL53L4CD_ClearInterrupt(
 	return status;
 }
 
+/*
 VL53L4CD_Error VL53L4CD_API::VL53L4CD_StartRanging(
 		Dev_t dev)
 {
@@ -445,12 +446,12 @@ VL53L4CD_Error VL53L4CD_API::VL53L4CD_StartRanging(
 
 	status |= VL53L4CD_RdDWord(dev, VL53L4CD_INTERMEASUREMENT_MS, &tmp);
 
-	/* Sensor runs in continuous mode */
+	//Sensor runs in continuous mode
 	if(tmp == (uint32_t)0)
 	{
 		status |= VL53L4CD_WrByte(dev, VL53L4CD_SYSTEM_START, 0x21);
 	}
-	/* Sensor runs in autonomous mode */
+	//Sensor runs in autonomous mode
 	else
 	{
 		status |= VL53L4CD_WrByte(dev, VL53L4CD_SYSTEM_START, 0x40);
@@ -503,6 +504,7 @@ VL53L4CD_Error VL53L4CD_API::VL53L4CD_CheckForDataReady(
 	return status;
 }
 
+*/
 
 
 VL53L4CD_Error VL53L4CD_API::VL53L4CD_SetRangeTiming(
@@ -594,6 +596,7 @@ VL53L4CD_Error VL53L4CD_API::VL53L4CD_SetRangeTiming(
 	return status;
 }
 
+/*
 VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetRangeTiming(
 		Dev_t dev,
 		uint32_t *p_timing_budget_ms,
@@ -604,7 +607,7 @@ VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetRangeTiming(
 	uint32_t tmp, ls_byte, ms_byte, macro_period_us;
 	float_t clock_pll_factor = (float_t)1.065;
 
-	/* Get InterMeasurement */
+	// Get InterMeasurement 
 	status |= VL53L4CD_RdDWord(dev, VL53L4CD_INTERMEASUREMENT_MS, &tmp);
 	status |= VL53L4CD_RdWord(dev,
 			VL53L4CD_RESULT__OSC_CALIBRATE_VAL, &clock_pll);
@@ -613,7 +616,7 @@ VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetRangeTiming(
 	clock_pll = (uint16_t)clock_pll_factor;
 	*p_inter_measurement_ms = (uint16_t)(tmp/(uint32_t)clock_pll);
 
-	/* Get TimingBudget */
+	//Get TimingBudget 
 	status |= VL53L4CD_RdWord(dev, 0x0006, &osc_frequency);
 	status |= VL53L4CD_RdWord(dev, VL53L4CD_RANGE_CONFIG_A,
 		&range_config_macrop_high);
@@ -634,12 +637,12 @@ VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetRangeTiming(
 				   >> (uint8_t)ms_byte);
 	}
 	 
-	 /* Mode continuous */
+	 //Mode continuous
 	 if(tmp == (uint32_t)0)
 	 {
 		*p_timing_budget_ms += (uint32_t)2500;
 	 }
-	 /* Mode autonomous */
+	 // Mode autonomous
 	 else
 	 {
 	      *p_timing_budget_ms *= (uint32_t)2;
@@ -649,7 +652,9 @@ VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetRangeTiming(
 	 *p_timing_budget_ms = *p_timing_budget_ms/(uint32_t)1000;
 
 	return status;
-}
+} */
+
+/*
 
 VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetResult(
 		Dev_t dev,
@@ -697,7 +702,9 @@ VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetResult(
 			/p_result->number_of_spad;
 
 	return status;
-}
+}*/
+
+/*
 
 VL53L4CD_Error VL53L4CD_API::VL53L4CD_SetOffset(
 		Dev_t dev,
@@ -868,15 +875,15 @@ VL53L4CD_Error VL53L4CD_API::VL53L4CD_StartTemperatureUpdate(
 
 	do{
 			status |= VL53L4CD_CheckForDataReady(dev, &tmp);
-			if(tmp == (uint8_t)1) /* Data ready */
+			if(tmp == (uint8_t)1) //Data ready
 			{
 					continue_loop = (uint8_t)0;
 			}
-			else if(i < (uint16_t)1000)       /* Wait for answer */
+			else if(i < (uint16_t)1000)       //Wait for answer
 			{
 					i++;
 			}
-			else /* Timeout 1000ms reached */
+			else // Timeout 1000ms reached 
 			{
 					continue_loop = (uint8_t)0;
 					status = (uint8_t)VL53L4CD_ERROR_TIMEOUT;
@@ -888,7 +895,9 @@ VL53L4CD_Error VL53L4CD_API::VL53L4CD_StartTemperatureUpdate(
 	status |= VL53L4CD_StopRanging(dev);
 
 	status += VL53L4CD_WrByte(dev,
-		VL53L4CD_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND, 0x09);
+		//VL53L4CD_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND, 0x09);
 	status += VL53L4CD_WrByte(dev, 0x0B, 0);
 	return status;
 }
+
+*/
