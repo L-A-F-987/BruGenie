@@ -38,6 +38,9 @@ int main(int argc, char ** argv)
 	Dev_t Dev = &LinuxDev;
 	VL53L4CD_Version_t TOF_SW_Version;
 
+
+	//Creating an object for testing new class for api 
+	VL53L4CD_API VL53L4CD;
 	/*********************************/
 	/*   Power on sensor and init    */
 	/*********************************/
@@ -50,7 +53,7 @@ int main(int argc, char ** argv)
 		return -1;
 	}
 	
-	status = VL53L4CD_GetSWVersion(&TOF_SW_Version);
+	status = VL53L4CD.VL53L4CD_GetSWVersion(&TOF_SW_Version);
 	printf("Starting examples of VL53L4CD driver (version %u.%u.%u.%u)\n",
 		TOF_SW_Version.major,
 		TOF_SW_Version.minor,
@@ -83,6 +86,8 @@ int main(int argc, char ** argv)
 			status = example2(Dev);
 			printf("\n");
 		}
+
+		/*
 		else if (strcmp(choice, "3") == 0) {
 			printf("Starting Test 3\n");
 			status = example3(Dev);
@@ -110,6 +115,7 @@ int main(int argc, char ** argv)
 		else{
 			printf("Invalid choice\n");
 		}
+		*/
 
 	} while (!exit_main_loop);
 

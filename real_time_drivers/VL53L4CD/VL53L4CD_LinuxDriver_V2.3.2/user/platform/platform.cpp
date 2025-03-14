@@ -14,11 +14,11 @@
 #include <unistd.h> // close()
 #include <time.h> // clock_gettime()
 
-#include <linux/i2c.h>
-#include <linux/i2c-dev.h>
 
 #include <thread> // adding cpp header files for real time interrupt
 #include <gpiod.h>
+#include <linux/i2c.h>
+#include <linux/i2c-dev.h>
 
 #include <sys/ioctl.h>
 
@@ -266,6 +266,8 @@ uint8_t	 VL53L4CD_WaitMs(Dev_t dev, uint32_t time_ms)
 	return 0;
 }
 
+
+/*
 uint8_t VL53L4CD_IsDataReady(Dev_t dev)
 {
 #ifdef STMVL53L4CD_KERNEL
@@ -280,17 +282,4 @@ uint8_t VL53L4CD_IsDataReady(Dev_t dev)
 #endif
 	return 1;
 }
-
-uint8_t VL53L4CD_IsDataReady_Ready_Interrupt_Based(Dev_t dev)
-{	
-	//int running = 1;
-
-	//pin
-	//while(running){
-		//const struct timespec ts = (1,0);
-		//gpiod_line_event_wait(, &ts);
-	
-	//}
-		
-	return 1;
-}
+*/

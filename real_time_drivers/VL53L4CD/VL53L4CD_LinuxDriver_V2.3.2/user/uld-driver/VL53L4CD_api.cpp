@@ -19,8 +19,15 @@
 #include <string.h>
 #include <math.h>
 #include <thread>
-#include <gpiod.h>
+#include <stdio.h>
 #include "VL53L4CD_api.h"
+#include <linux/i2c.h>
+#include <linux/i2c-dev.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+
+
 
 static const uint8_t VL53L4CD_DEFAULT_CONFIGURATION[] = {
 	#ifdef VL53L4CD_I2C_FAST_MODE_PLUS
@@ -134,7 +141,190 @@ static const uint8_t VL53L4CD_DEFAULT_CONFIGURATION[] = {
 	  put 0x40 in location 0x87 */
 };
 
-VL53L4CD_Error VL53L4CD_GetSWVersion(
+/*added by BruGenie*/
+
+//Interrupt Based Callback
+
+void VL53L4CD_API::start_recording_data()
+{	
+	interrupt_pin = Default_interrupt_pin;
+	chip = drdy_chip;
+
+	uint8_t Addr;
+
+	//assigning pin and chip for interrupt
+	chipDRDY = gpiod_chip_open_by_number(chip);
+	pinDRDY = gpiod_chip_get_line(chipDRDY,interrupt_pin);
+
+	//setting the I2C bus being used
+	char gpioFilename[19] ="/dev/i2c-1";
+
+	fd_i2c = open(gpioFilename, O_RDWR);
+
+	if(fd_i2c <0 ){
+		char i2copen[] = "failed to open i2c\n";
+
+	//checking if the device opened
+	#ifdef DEBUG
+		fprintf(stderr,i2copen);
+	#endif 
+		throw i2copen;
+	}
+	
+	if (ioctl(fd_i2c,I2C_SLAVE,address)){
+		
+		char i2cslave[] = "Could not access I2C address!";
+
+	//throwing error if the address could not be accessed
+	#ifdef DEBUG
+		fprintf(stderr,i2cslave);
+	#endif
+
+		throw i2cslave;
+	}
+
+	#ifdef DEBUG
+	fprintf(stderr,"Init.\n");
+	#endif
+
+	//setting up sensor configuration
+	for (Addr = (uint8_t)0x2D; Addr <= (uint8_t)0x87; Addr++)
+	{
+		I2C_WrByte(Addr,
+				VL53L4CD_DEFAULT_CONFIGURATION[
+                                  Addr - (uint8_t)0x2D]);
+	
+	//printf("16bit:%X\n8bit:%X\n",Addr,(uint8_t)Addr);
+	}
+	
+	running = true;
+
+	//Clearing System Interrupt
+	I2C_WrByte(VL53L4CD_SYSTEM__INTERRUPT_CLEAR, 0x01);
+
+	//stopping ranging
+	I2C_WrByte(VL53L4CD_SYSTEM_START, 0x80);
+
+	//setting ????
+	I2C_WrByte(VL53L4CD_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND,(uint8_t)0x09);
+
+	I2C_WrByte(0x0B, (uint8_t)0);
+
+	I2C_WrWord(0x0024, 0x500);
+
+	//setting the sensor to begin recording data
+	I2C_WrByte(VL53L4CD_SYSTEM_START, (uint8_t)0x40);
+	
+	//thr = std::thread(&VL53L4CD_API::worker,this);
+	worker();
+
+}
+
+uint8_t VL53L4CD_API::I2C_WrWord(uint8_t reg, unsigned value)
+{	
+	
+	uint8_t data_write[4];
+	data_write[0] = (reg >> 8) & 0xFF;
+	data_write[1] = reg & 0xFF;
+	data_write[2] = (value >> 8) & 0xFF;
+	data_write[3] = value & 0XFF;
+	long int r = write(fd_i2c,&data_write,4);
+	if(r < 0){
+		printf("%i",r);
+	#ifdef DEBUG
+                fprintf(stderr,"Could not read word from %02x. ret=%d.\n",address,r);
+	#endif
+             throw "Could not read from i2c.";
+	}
+
+	//printf("Register:%x\nValue:%x\n",reg,value);
+	
+
+	//printf("datawrite[1]:%x\ndatawrite[2]:%x\n",data_write[1],data_write[2]);
+
+}
+
+uint8_t VL53L4CD_API::I2C_WrByte(uint8_t reg, unsigned value)
+{	
+	
+	uint8_t data_write[3];
+	data_write[0] = (reg >> 8) & 0xFF;
+	data_write[1] = reg & 0xFF;
+	data_write[2] = value & 0XFF;
+	long int r = write(fd_i2c,&data_write,3);
+	if(r < 0){
+		printf("%i",r);
+	#ifdef DEBUG
+                fprintf(stderr,"Could not read word from %02x. ret=%d.\n",address,r);
+	#endif
+             throw "Could not read from i2c.";
+	}
+
+	//printf("Register:%x\nValue:%x\n",reg,value);
+	
+
+	//printf("datawrite[1]:%x\ndatawrite[2]:%x\n",data_write[1],data_write[2]);
+
+}
+
+
+void VL53L4CD_API::DataReady(){
+	//	printf("I Have Data For You\n");
+	uint16_t v = i2c_read_conversion(VL53L4CD_RESULT__DISTANCE);
+	for(auto &cb: adsCallbackInterface){
+		cb -> hasVL53L4CDSample(v);
+	}
+
+	printf("%u\n",v);
+}
+
+void VL53L4CD_API::stop_recording_data(){
+	if(!running) return;
+	running = false;
+	//thr.join();
+	gpiod_line_release(pinDRDY);
+	gpiod_chip_close(chipDRDY);
+	close(fd_i2c);
+}
+
+void VL53L4CD_API::worker()
+{
+	while(running) {
+
+		//timespec with constant timeout duration
+		const struct timespec ts = {1,0};
+		gpiod_line_event_wait(pinDRDY, &ts);
+		struct gpiod_line_event event;
+		gpiod_line_event_read(pinDRDY, &event);
+		DataReady();
+	}
+}
+
+int VL53L4CD_API::i2c_read_conversion(uint8_t reg){
+
+	uint8_t data_array[2];
+	data_array[0] = (reg>>8) && 0xFF;
+	data_array[1] = reg & 0xFF;
+	write(fd_i2c,&data_array,2);
+
+
+	uint8_t read_data[2];
+    long int r = read(fd_i2c, read_data, 2);
+
+
+	if(r < 0){
+	#ifdef DEBUG
+               fprintf(stderr,"Could not read word from %02x. ret=%d.\n",address,r);
+	#endif
+                throw "Could not read from i2c.";
+	}
+	return (((unsigned)(read_data[0])) << 8) | ((unsigned)(read_data[1]));
+	
+};
+
+
+/*end of added by BruGenie*/
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetSWVersion(
 		VL53L4CD_Version_t *p_Version)
 {
 	VL53L4CD_Error Status = VL53L4CD_ERROR_NONE;
@@ -146,7 +336,7 @@ VL53L4CD_Error VL53L4CD_GetSWVersion(
 	return Status;
 }
 
-VL53L4CD_Error VL53L4CD_SetI2CAddress(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_SetI2CAddress(
 		Dev_t dev,
 		uint8_t new_address)
 {
@@ -157,7 +347,7 @@ VL53L4CD_Error VL53L4CD_SetI2CAddress(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_GetSensorId(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetSensorId(
 		Dev_t dev,
 		uint16_t *p_id)
 {
@@ -167,7 +357,7 @@ VL53L4CD_Error VL53L4CD_GetSensorId(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_SensorInit(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_SensorInit(
 		Dev_t dev)
 {
 	VL53L4CD_Error status = VL53L4CD_ERROR_NONE;
@@ -238,7 +428,7 @@ VL53L4CD_Error VL53L4CD_SensorInit(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_ClearInterrupt(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_ClearInterrupt(
 		Dev_t dev)
 {
 	VL53L4CD_Error status = VL53L4CD_ERROR_NONE;
@@ -247,7 +437,7 @@ VL53L4CD_Error VL53L4CD_ClearInterrupt(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_StartRanging(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_StartRanging(
 		Dev_t dev)
 {
 	VL53L4CD_Error status = VL53L4CD_ERROR_NONE;
@@ -269,7 +459,7 @@ VL53L4CD_Error VL53L4CD_StartRanging(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_StopRanging(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_StopRanging(
 		Dev_t dev)
 {
 	VL53L4CD_Error status = VL53L4CD_ERROR_NONE;
@@ -278,7 +468,7 @@ VL53L4CD_Error VL53L4CD_StopRanging(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_CheckForDataReady(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_CheckForDataReady(
 		Dev_t dev,
 		uint8_t *p_is_data_ready)
 {
@@ -313,7 +503,9 @@ VL53L4CD_Error VL53L4CD_CheckForDataReady(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_SetRangeTiming(
+
+
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_SetRangeTiming(
 		Dev_t dev,
 		uint32_t timing_budget_ms,
 		uint32_t inter_measurement_ms)
@@ -402,7 +594,7 @@ VL53L4CD_Error VL53L4CD_SetRangeTiming(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_GetRangeTiming(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetRangeTiming(
 		Dev_t dev,
 		uint32_t *p_timing_budget_ms,
 		uint32_t *p_inter_measurement_ms)
@@ -459,7 +651,7 @@ VL53L4CD_Error VL53L4CD_GetRangeTiming(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_GetResult(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetResult(
 		Dev_t dev,
 		VL53L4CD_ResultsData_t *p_result)
 {
@@ -507,7 +699,7 @@ VL53L4CD_Error VL53L4CD_GetResult(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_SetOffset(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_SetOffset(
 		Dev_t dev,
 		int16_t OffsetValueInMm)
 {
@@ -522,7 +714,7 @@ VL53L4CD_Error VL53L4CD_SetOffset(
 	return status;
 }
 
-VL53L4CD_Error  VL53L4CD_GetOffset(
+VL53L4CD_Error  VL53L4CD_API::VL53L4CD_GetOffset(
 		Dev_t dev,
 		int16_t *p_offset)
 {
@@ -543,7 +735,7 @@ VL53L4CD_Error  VL53L4CD_GetOffset(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_SetXtalk(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_SetXtalk(
 		Dev_t dev,
 		uint16_t XtalkValueKcps)
 {
@@ -560,7 +752,7 @@ VL53L4CD_Error VL53L4CD_SetXtalk(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_GetXtalk(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetXtalk(
 		Dev_t dev,
 		uint16_t *p_xtalk_kcps)
 {
@@ -576,7 +768,7 @@ VL53L4CD_Error VL53L4CD_GetXtalk(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_SetDetectionThresholds(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_SetDetectionThresholds(
 		Dev_t dev,
 		uint16_t distance_low_mm,
 		uint16_t distance_high_mm,
@@ -590,7 +782,7 @@ VL53L4CD_Error VL53L4CD_SetDetectionThresholds(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_GetDetectionThresholds(Dev_t dev,
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetDetectionThresholds(Dev_t dev,
 		uint16_t *p_distance_low_mm,
 		uint16_t *p_distance_high_mm,
 		uint8_t *p_window)
@@ -605,7 +797,7 @@ VL53L4CD_Error VL53L4CD_GetDetectionThresholds(Dev_t dev,
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_SetSignalThreshold(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_SetSignalThreshold(
 		Dev_t dev,
 		uint16_t signal_kcps)
 {
@@ -616,7 +808,7 @@ VL53L4CD_Error VL53L4CD_SetSignalThreshold(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_GetSignalThreshold(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetSignalThreshold(
 		Dev_t dev,
 		uint16_t 	*p_signal_kcps)
 {
@@ -630,7 +822,7 @@ VL53L4CD_Error VL53L4CD_GetSignalThreshold(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_SetSigmaThreshold(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_SetSigmaThreshold(
 		Dev_t dev,
 		uint16_t 	sigma_mm)
 {
@@ -649,7 +841,7 @@ VL53L4CD_Error VL53L4CD_SetSigmaThreshold(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_GetSigmaThreshold(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_GetSigmaThreshold(
 		Dev_t dev,
 		uint16_t 	*p_sigma_mm)
 {
@@ -662,7 +854,7 @@ VL53L4CD_Error VL53L4CD_GetSigmaThreshold(
 	return status;
 }
 
-VL53L4CD_Error VL53L4CD_StartTemperatureUpdate(
+VL53L4CD_Error VL53L4CD_API::VL53L4CD_StartTemperatureUpdate(
 		Dev_t dev)
 {
 	VL53L4CD_Error status = VL53L4CD_ERROR_NONE;

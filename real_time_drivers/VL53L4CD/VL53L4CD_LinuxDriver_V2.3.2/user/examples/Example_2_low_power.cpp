@@ -54,7 +54,8 @@ int example2(Dev_t dev)
 	/*********************************/
 
 	/* (Optional) Check if there is a VL53L4CD sensor connected */
-	status = VL53L4CD_GetSensorId(dev, &sensor_id);
+	VL53L4CD_API VL53L4CD;
+	status = VL53L4CD.VL53L4CD_GetSensorId(dev, &sensor_id);
 	if(status || (sensor_id != 0xEBAA))
 	{
 		printf("VL53L4CD not detected at requested address\n");
@@ -62,7 +63,7 @@ int example2(Dev_t dev)
 	}
 
 	/* (Mandatory) Init VL53L4CD sensor */
-	status = VL53L4CD_SensorInit(dev);
+	status = VL53L4CD.VL53L4CD_SensorInit(dev);
 	if(status)
 	{
 		printf("VL53L4CD ULD Loading failed\n");
@@ -93,7 +94,7 @@ int example2(Dev_t dev)
 
 	// Timing budget of 100ms, and ranging period 1000ms (10% active ranging and
 	// 90% low power)
-	status = VL53L4CD_SetRangeTiming(dev, 100, 1000);
+	status = VL53L4CD.VL53L4CD_SetRangeTiming(dev, 100, 1000);
 	if(status)
 	{
 		printf("VL53L4CD_SetRangeTiming failed with status %u\n", status);
@@ -105,7 +106,7 @@ int example2(Dev_t dev)
 	/*         Ranging loop          */
 	/*********************************/
 
-	status = VL53L4CD_StartRanging(dev);
+	status = VL53L4CD.VL53L4CD_StartRanging(dev);
 
 	loop = 0;
 	while(loop < 200)
@@ -114,15 +115,16 @@ int example2(Dev_t dev)
 		 * Another way can be to wait for HW interrupt raised on PIN 7
 		 * (GPIO 1) when a new measurement is ready */
  
-		isReady = VL53L4CD_IsDataReady(dev);
+		//isReady = VL53L4CD_IsDataReady(dev);
+		isReady = 1;
 
 		if(isReady)
 		{
 			/* (Mandatory) Clear HW interrupt to restart measurements */
-			VL53L4CD_ClearInterrupt(dev);
+			VL53L4CD.VL53L4CD_ClearInterrupt(dev);
 
 			/* Read measured distance. RangeStatus = 0 means valid data */
-			VL53L4CD_GetResult(dev, &results);
+			VL53L4CD.VL53L4CD_GetResult(dev, &results);
 			printf("Status = %6u, Distance = %6u, Signal = %6u\n",
 				 results.range_status,
 				 results.distance_mm,
@@ -131,7 +133,7 @@ int example2(Dev_t dev)
 		}
 	}
 
-	status = VL53L4CD_StopRanging(dev);
+	status = VL53L4CD.VL53L4CD_StopRanging(dev);
 	printf("End of ULD demo\n");
 	return status;
 }
