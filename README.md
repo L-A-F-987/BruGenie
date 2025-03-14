@@ -1,7 +1,17 @@
 # BruGenie - "Coffee Anyway You Wish"
 
 <img width="400" alt="image" src="Images/Bru Genie Logos + Margins-03.svg">
+<img width="400" alt="image" src="Images/Bru Genie Logos + Margins-03.svg">
 
+This GitHub repository showcases a real-time embedded systems project focused on developing a smart coffee machine. The machine measures mug volume to ensure each cup is filled to the perfect level, maintaining a consistent milk-to-coffee ratio regardless of cup size.
+
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Building](#building)
+- [Social Media Channels](#social-media-channels)
+- [Acknowledgements](#acknowledgements)
+- [Authors](#authors)
 This GitHub repository showcases a real-time embedded systems project focused on developing a smart coffee machine. The machine measures mug volume to ensure each cup is filled to the perfect level, maintaining a consistent milk-to-coffee ratio regardless of cup size.
 
 ## Table of Contents
@@ -33,8 +43,29 @@ This GitHub repository showcases a real-time embedded systems project focused on
 - 1 × Russell Hobbs Coffee Machine
 
 ### Libraries
+### Microcontroller
+
+- Rasberry PI 5
+
+### Sensors
+
+- 2 × VL53L4CD – Time-of-Flight Sensors
+- 1 × DS18B20 – Temperature Sensor
+- 1 × TE Connectivity – Load Cell
+- 1 × ADS1115 – 16-Bit ADC
+- 1 × Parallax Inc Servo Motor – 4–6V, 50 RPM, 27 N·cm Max Output Torque
+
+### Additional Components
+
+- 1 × PTC Heating Element
+- 1 × 10mm Lead Screw
+- 1 × Igus Flanged Round Nut – 10mm
+- 1 × Russell Hobbs Coffee Machine
+
+### Libraries
 
 ```
+apt-get install cmake
 apt-get install cmake
 ```
 
@@ -49,7 +80,7 @@ This will generate the following executables:
 
 ### Running Software Tests
 
-To execute the sofrtware tests run the following command after building.
+To execute the software tests run the following command after building.
 
 ```
 make test
