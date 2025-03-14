@@ -15,6 +15,11 @@
 #define VL53L4CD_API_H_
 
 #include "../platform/platform.h"
+#include <gpiod.h>
+#include <thread>
+#include <vector>
+
+
 
 /**
  *  @brief Driver version
@@ -36,6 +41,7 @@ typedef uint8_t VL53L4CD_Error;
 #define VL53L4CD_ERROR_INVALID_ARGUMENT		((uint8_t)254U)
 #define VL53L4CD_ERROR_TIMEOUT				((uint8_t)255U)
 
+#define DEFAULT_VL53L4CD_ADDRESS 0x29
 
 /**
  *  @brief Inner Macro for API. Not for user, only for development.
@@ -73,6 +79,10 @@ typedef uint8_t VL53L4CD_Error;
 #define VL53L4CD_RESULT__OSC_CALIBRATE_VAL      ((uint16_t)0x00DE)
 #define VL53L4CD_FIRMWARE__SYSTEM_STATUS        ((uint16_t)0x00E5)
 #define VL53L4CD_IDENTIFICATION__MODEL_ID       ((uint16_t)0x010F)
+
+//defining the default chip and interrupt pins
+#define drdy_chip 4
+#define Default_interrupt_pin 8;
 
 /**
  *  @brief defines Software Version
@@ -115,6 +125,28 @@ typedef struct {
  * software version.
  * @return (VL53L4CD_ERROR) status : 0 if SW version is OK.
  */
+
+//adding cpp class 
+class VL53L4CD_API{
+	public:
+
+	//function to begin recording data
+	void start_recording_data();
+
+	//function to stop recording data 
+	void stop_recording_data();
+
+	//virtual void function for use in callback
+	struct ADSCallbackInterface {
+		virtual void hasVL53L4CDSample(float sample) = 0;
+	};
+
+	void registerCallback(ADSCallbackInterface* ci) {
+		adsCallbackInterface.push_back(ci);
+	};
+
+
+
 
 VL53L4CD_Error VL53L4CD_GetSWVersion(
 		VL53L4CD_Version_t *pVersion);
@@ -403,4 +435,40 @@ VL53L4CD_Error VL53L4CD_GetSigmaThreshold(
 
 VL53L4CD_Error VL53L4CD_StartTemperatureUpdate(Dev_t dev);
 
+private: 
+
+	bool running = false; 
+
+	//defining a default pin for interrupt 
+	struct gpiod_line *pinDRDY = nullptr;
+	struct gpiod_chip *chipDRDY = nullptr;
+
+	std::thread thr;
+
+	int i2c_read_conversion(uint8_t reg);
+
+	std::vector<ADSCallbackInterface*> adsCallbackInterface;
+
+	int interrupt_pin;
+	int chip;
+	int fd_i2c = -1;
+
+
+	//defining the address of the sensor 
+	uint8_t address = DEFAULT_VL53L4CD_ADDRESS;
+
+
+	//function to write a 2 byte long word to a register 
+	uint8_t I2C_WrWord(uint8_t reg,unsigned value);
+
+	//function to write a single byte to a register
+	uint8_t I2C_WrByte(uint8_t reg, unsigned value);
+
+	//function to read data when data ready pin is high
+	void DataReady();
+
+	//function using blocking IO to wait for the interrupt pin before reading data in real-time
+	void worker();
+
+};
 #endif  //VL53L4CD_API_H_

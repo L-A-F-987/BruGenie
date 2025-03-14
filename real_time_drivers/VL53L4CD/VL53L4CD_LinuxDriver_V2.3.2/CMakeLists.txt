@@ -22,7 +22,7 @@ add_library(LIB_PLATFORM
 add_library(LIB_uld_driver
   SHARED
   user/uld-driver/VL53L4CD_api.cpp
-  user/uld-driver/VL53L4CD_calibration.cpp
+  #user/uld-driver/VL53L4CD_calibration.cpp
 )
 
 #example files 
@@ -30,17 +30,18 @@ add_library(LIB_test_cpps
   SHARED
   user/examples/Example_1_ranging_basic.cpp
   user/examples/Example_2_low_power.cpp
-  user/examples/Example_3_high_accuracy.cpp 
-  user/examples/Example_4_fast_ranging.cpp
-  user/examples/Example_5_calibrate_offset_xtalk.cpp
-  user/examples/Example_6_detection_thresholds.cpp)
+  #user/examples/Example_3_high_accuracy.cpp 
+  #user/examples/Example_4_fast_ranging.cpp
+  #user/examples/Example_5_calibrate_offset_xtalk.cpp
+  #user/examples/Example_6_detection_thresholds.cpp
+  )
 
 target_include_directories(LIB_uld_driver PUBLIC uld-driver/)
 target_include_directories(LIB_PLATFORM PUBLIC platform/)
 target_include_directories(LIB_test_cpps PUBLIC examples/)
 
 
-
+target_link_libraries(LIB_uld_driver gpiod)
 target_link_libraries(LIB_PLATFORM gpiod LIB_uld_driver LIB_test_cpps)
 
 

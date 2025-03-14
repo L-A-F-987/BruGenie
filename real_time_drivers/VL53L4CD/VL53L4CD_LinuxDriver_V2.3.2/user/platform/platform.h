@@ -17,9 +17,6 @@
 #include <stdint.h>
 #include <string.h>
 
-//Defining the interrupt pin for callback 
-#define Default_interrupt_pin 8
-
 
 typedef struct {
 	int      fd;    	/* File descriptor */
@@ -103,8 +100,10 @@ uint8_t VL53L4CD_WaitMs(Dev_t dev, uint32_t TimeMs);
  * @param (Dev_t) dev : Pointer of VL53L4CD_LinuxDev structure.
  * @return (uint8_t) status : 1 if data is ready
  */
+
+ /*
 uint8_t VL53L4CD_IsDataReady(Dev_t dev);
 
 uint8_t VL53L4CD_IsDataReady_Ready_Interrupt_Based(Dev_t dev);
-
+*/
 #endif	// _PLATFORM_H_
