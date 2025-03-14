@@ -1,17 +1,7 @@
 # BruGenie - "Coffee Anyway You Wish"
 
 <img width="400" alt="image" src="Images/Bru Genie Logos + Margins-03.svg">
-<img width="400" alt="image" src="Images/Bru Genie Logos + Margins-03.svg">
 
-This GitHub repository showcases a real-time embedded systems project focused on developing a smart coffee machine. The machine measures mug volume to ensure each cup is filled to the perfect level, maintaining a consistent milk-to-coffee ratio regardless of cup size.
-
-## Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Building](#building)
-- [Social Media Channels](#social-media-channels)
-- [Acknowledgements](#acknowledgements)
-- [Authors](#authors)
 This GitHub repository showcases a real-time embedded systems project focused on developing a smart coffee machine. The machine measures mug volume to ensure each cup is filled to the perfect level, maintaining a consistent milk-to-coffee ratio regardless of cup size.
 
 ## Table of Contents
