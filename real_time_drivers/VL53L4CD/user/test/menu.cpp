@@ -34,9 +34,9 @@ int main(int argc, char ** argv)
 {
 	char choice[20];
 	int status;
-	//VL53L4CD_LinuxDev LinuxDev;
-	//Dev_t Dev = &LinuxDev;
-	//VL53L4CD_Version_t TOF_SW_Version;
+	VL53L4CD_LinuxDev LinuxDev;
+	Dev_t Dev = &LinuxDev;
+	VL53L4CD_Version_t TOF_SW_Version;
 
 
 	//Creating an object for testing new class for api 
@@ -46,19 +46,19 @@ int main(int argc, char ** argv)
 	/*********************************/
 
 	/* Initialize channel com */
-	//status = VL53L4CD_comms_init(Dev);
-	//if(status)
-	//{
-	//	printf("VL53L4CD comms init failed\n");
-	//	return -1;
-	//}
+	status = VL53L4CD_comms_init(Dev);
+	if(status)
+	{
+		printf("VL53L4CD comms init failed\n");
+		return -1;
+	}
 	
-	//status = VL53L4CD.VL53L4CD_GetSWVersion(&TOF_SW_Version);
-	//printf("Starting examples of VL53L4CD driver (version %u.%u.%u.%u)\n",
-	//	TOF_SW_Version.major,
-	//	TOF_SW_Version.minor,
-	//	TOF_SW_Version.build,
-	//	TOF_SW_Version.revision);
+	status = VL53L4CD.VL53L4CD_GetSWVersion(&TOF_SW_Version);
+	printf("Starting examples of VL53L4CD driver (version %u.%u.%u.%u)\n",
+		TOF_SW_Version.major,
+		TOF_SW_Version.minor,
+		TOF_SW_Version.build,
+		TOF_SW_Version.revision);
 
 	do {
 		printf("----------------------------------------------------------------------------------------------------------\n");
@@ -78,12 +78,12 @@ int main(int argc, char ** argv)
 
 		if (strcmp(choice, "1") == 0) {
 			printf("Starting Test 1\n");
-			status = example1();
+			status = example1(Dev);
 			printf("\n");
 		}
 		else if (strcmp(choice, "2") == 0) {
 			printf("Starting Test 2\n");
-			status = example2();
+			status = example2(Dev);
 			printf("\n");
 		}
 
@@ -119,7 +119,7 @@ int main(int argc, char ** argv)
 
 	} while (!exit_main_loop);
 
-	//VL53L4CD_comms_close(Dev);
+	VL53L4CD_comms_close(Dev);
 
 	return 0;
 }

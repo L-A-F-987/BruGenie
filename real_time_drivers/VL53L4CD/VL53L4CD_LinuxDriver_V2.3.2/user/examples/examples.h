@@ -14,14 +14,13 @@
 #ifndef EXAMPLES_H_
 #define EXAMPLES_H_
 
-#include "../platform/platform.h"
 
-int example1(Dev_t dev);
-int example2(Dev_t dev);
-int example3(Dev_t dev);
-int example4(Dev_t dev);
-int example5(Dev_t dev);
-int example6(Dev_t dev);
+int example1();
+int example2();
+//int example3(Dev_t dev);
+//nt example4(Dev_t dev);
+//int example5(Dev_t dev);
+//int example6(Dev_t dev);
 
 #endif
 
