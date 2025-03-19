@@ -322,7 +322,7 @@ int VL53L4CD_API::i2c_read_conversion(uint8_t reg){
 	
 };
 
-void VL53L4CD_API::VL53L4CD_SetRangeTiming_RealTime(int fd_i2c
+void VL53L4CD_API::VL53L4CD_SetRangeTiming_RealTime(int fd_i2c,
 		uint32_t timing_budget_ms,
 		uint32_t inter_measurement_ms)
 {
