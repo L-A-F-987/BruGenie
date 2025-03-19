@@ -14,6 +14,7 @@
 #ifndef VL53L4CD_API_H_
 #define VL53L4CD_API_H_
 
+#include "../platform/platform.h"
 #include <gpiod.h>
 #include <thread>
 #include <vector>
@@ -147,8 +148,8 @@ class VL53L4CD_API{
 
 
 
-//VL53L4CD_Error VL53L4CD_GetSWVersion(
-//		VL53L4CD_Version_t *pVersion);
+VL53L4CD_Error VL53L4CD_GetSWVersion(
+		VL53L4CD_Version_t *pVersion);
 
 
 /**
@@ -160,9 +161,9 @@ class VL53L4CD_API{
  * programmed.
  */
 
-//VL53L4CD_Error VL53L4CD_SetI2CAddress(
-		//Dev_t dev,
-		//uint8_t new_address);
+VL53L4CD_Error VL53L4CD_SetI2CAddress(
+		Dev_t dev,
+		uint8_t new_address);
 
 /**
  * @brief This function is used to get the sensor id of VL53L4CD. The sensor id
@@ -172,9 +173,9 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_GetSensorId(
-		//Dev_t dev,
-		//uint16_t *p_id);
+VL53L4CD_Error VL53L4CD_GetSensorId(
+		Dev_t dev,
+		uint16_t *p_id);
 
 /**
  * @brief This function is used to initialize the sensor.
@@ -182,8 +183,8 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if init is OK.
  */
 
-//VL53L4CD_Error VL53L4CD_SensorInit(
-		//Dev_t dev);
+VL53L4CD_Error VL53L4CD_SensorInit(
+		Dev_t dev);
 
 /**
  * @brief This function clears the interrupt. It needs to be called after a
@@ -192,8 +193,8 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_ClearInterrupt(
-		//Dev_t dev);
+VL53L4CD_Error VL53L4CD_ClearInterrupt(
+		Dev_t dev);
 
 /**
  * @brief This function starts a ranging session. The ranging operation is
@@ -203,8 +204,8 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_StartRanging(
-		//Dev_t dev);
+VL53L4CD_Error VL53L4CD_StartRanging(
+		Dev_t dev);
 
 /**
  * @brief This function stops the ranging in progress.
@@ -212,8 +213,8 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_StopRanging(
-		//Dev_t dev);
+VL53L4CD_Error VL53L4CD_StopRanging(
+		Dev_t dev);
 
 /**
  * @brief This function check if a new data is available by polling a dedicated
@@ -224,9 +225,9 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_CheckForDataReady(
-//		Dev_t dev,
-//		uint8_t *p_is_data_ready);
+VL53L4CD_Error VL53L4CD_CheckForDataReady(
+		Dev_t dev,
+		uint8_t *p_is_data_ready);
 
 /**
  * @brief This function sets new range timing. Timing are composed of
@@ -245,10 +246,10 @@ class VL53L4CD_API{
  * @return (uint8_t) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_SetRangeTiming(
-//		Dev_t dev,
-//		uint32_t timing_budget_ms,
-//		uint32_t inter_measurement_ms);
+VL53L4CD_Error VL53L4CD_SetRangeTiming(
+		Dev_t dev,
+		uint32_t timing_budget_ms,
+		uint32_t inter_measurement_ms);
 
 /**
  * @brief This function gets the current range timing. Timing are composed of
@@ -264,10 +265,10 @@ class VL53L4CD_API{
  * @return (uint8_t) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_GetRangeTiming(
-//		Dev_t dev,
-//		uint32_t *p_timing_budget_ms,
-//		uint32_t *p_inter_measurement_ms);
+VL53L4CD_Error VL53L4CD_GetRangeTiming(
+		Dev_t dev,
+		uint32_t *p_timing_budget_ms,
+		uint32_t *p_inter_measurement_ms);
 
 /**
  * @brief This function gets the results reported by the sensor.
@@ -277,7 +278,7 @@ class VL53L4CD_API{
  * @return (uint8_t) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_GetResult(Dev_t dev, VL53L4CD_ResultsData_t *pResult);
+VL53L4CD_Error VL53L4CD_GetResult(Dev_t dev, VL53L4CD_ResultsData_t *pResult);
 
 /**
  * @brief This function sets a new offset correction in mm. Offset corresponds
@@ -288,7 +289,7 @@ class VL53L4CD_API{
  * @return (uint8_t) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_SetOffset(Dev_t dev, int16_t OffsetValueInMm);
+VL53L4CD_Error VL53L4CD_SetOffset(Dev_t dev, int16_t OffsetValueInMm);
 
 /**
  * @brief This function gets the current offset correction in mm. Offset
@@ -300,7 +301,7 @@ class VL53L4CD_API{
  * @return (uint8_t) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_GetOffset(Dev_t dev, int16_t *Offset);
+VL53L4CD_Error VL53L4CD_GetOffset(Dev_t dev, int16_t *Offset);
 
 /**
  * @brief This function sets a new Xtalk value in kcps. Xtalk represents the
@@ -313,7 +314,7 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_SetXtalk(Dev_t dev, uint16_t XtalkValueKcps);
+VL53L4CD_Error VL53L4CD_SetXtalk(Dev_t dev, uint16_t XtalkValueKcps);
 
 /**
  * @brief This function gets the current Xtalk value in kcps. Xtalk represents
@@ -324,7 +325,7 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_GetXtalk(Dev_t dev, uint16_t *p_xtalk_kcps);
+VL53L4CD_Error VL53L4CD_GetXtalk(Dev_t dev, uint16_t *p_xtalk_kcps);
 
 /**
  * @brief This function sets new detection thresholds. The detection
@@ -342,10 +343,10 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_SetDetectionThresholds(Dev_t dev,
-		//uint16_t distance_low_mm,
-		//uint16_t distance_high_mm,
-		//uint8_t window);
+VL53L4CD_Error VL53L4CD_SetDetectionThresholds(Dev_t dev,
+		uint16_t distance_low_mm,
+		uint16_t distance_high_mm,
+		uint8_t window);
 
 
 /**
@@ -362,10 +363,10 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_GetDetectionThresholds(Dev_t dev,
-		//uint16_t *p_distance_low_mm,
-		//uint16_t *p_distance_high_mm,
-		//uint8_t *p_window);
+VL53L4CD_Error VL53L4CD_GetDetectionThresholds(Dev_t dev,
+		uint16_t *p_distance_low_mm,
+		uint16_t *p_distance_high_mm,
+		uint8_t *p_window);
 
 /**
  * @brief This function sets a new signal threshold in kcps. If a
@@ -378,7 +379,7 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_SetSignalThreshold(Dev_t dev, uint16_t signal_kcps);
+VL53L4CD_Error VL53L4CD_SetSignalThreshold(Dev_t dev, uint16_t signal_kcps);
 
 /**
  * @brief This function returns the current signal threshold in kcps. If a
@@ -389,8 +390,8 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if OK.
  */
 
-//VL53L4CD_Error VL53L4CD_GetSignalThreshold(Dev_t dev,
-		//uint16_t *p_signal_kcps);
+VL53L4CD_Error VL53L4CD_GetSignalThreshold(Dev_t dev,
+		uint16_t *p_signal_kcps);
 
 /**
  * @brief This function programs a new sigma threshold. The sigma corresponds to
@@ -404,9 +405,9 @@ class VL53L4CD_API{
  * high.
  */
 
-//VL53L4CD_Error VL53L4CD_SetSigmaThreshold(
-//		Dev_t dev,
-//		uint16_t 	sigma_mm);
+VL53L4CD_Error VL53L4CD_SetSigmaThreshold(
+		Dev_t dev,
+		uint16_t 	sigma_mm);
 
 /**
  * @brief This function gets the current sigma threshold. The sigma corresponds
@@ -418,9 +419,9 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if programming is OK.
  */
 
-//VL53L4CD_Error VL53L4CD_GetSigmaThreshold(
-//		Dev_t dev,
-//		uint16_t 	*p_sigma_mm);
+VL53L4CD_Error VL53L4CD_GetSigmaThreshold(
+		Dev_t dev,
+		uint16_t 	*p_sigma_mm);
 
 /**
  * @brief This function can be called when the temperature might have changed by
@@ -432,7 +433,7 @@ class VL53L4CD_API{
  * @return (VL53L4CD_ERROR) status : 0 if update is OK.
  */
 
-//VL53L4CD_Error VL53L4CD_StartTemperatureUpdate(Dev_t dev);
+VL53L4CD_Error VL53L4CD_StartTemperatureUpdate(Dev_t dev);
 
 private: 
 
@@ -468,10 +469,6 @@ private:
 
 	//function using blocking IO to wait for the interrupt pin before reading data in real-time
 	void worker();
-
-	//function to set range timing 
-	void VL53L4CD_SetRangeTiming_RealTime(int fd_i2c,uint32_t timing_budget_ms,
-		uint32_t inter_measurement_ms);
 
 };
 #endif  //VL53L4CD_API_H_
