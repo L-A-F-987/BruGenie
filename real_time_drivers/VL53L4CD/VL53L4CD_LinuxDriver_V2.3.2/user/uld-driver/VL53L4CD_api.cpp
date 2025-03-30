@@ -187,17 +187,65 @@ void VL53L4CD_API::start_recording_data()
 	fprintf(stderr,"Init.\n");
 	#endif
 
+	//adding a while loop to check if the sensor has booted 
+	
+	uint8_t continue_loop = (uint8_t)1;
+	uint8_t tmp;
+	uint16_t i = 0;
+
+	do{
+		tmp = i2c_read_Byte(
+				VL53L4CD_FIRMWARE__SYSTEM_STATUS);
+
+		if(tmp == (uint8_t)0x3) //Sensor booted
+		{
+			continue_loop = (uint8_t)0;
+			printf("sensor booted\n");
+			printf("sensor boot value:%x\n",tmp);
+		}
+		else if(i < (uint16_t)1000)       //Wait for boot
+		{
+			i++;
+			printf("waiting for sensor boot\n");
+		}
+		else // Timeout 1000ms reached
+		{
+			continue_loop = (uint8_t)0;
+		}
+		usleep(1000);
+	}while(continue_loop == (uint8_t)1);
+
+
 	//setting up sensor configuration
 	for (Addr = (uint8_t)0x2D; Addr <= (uint8_t)0x87; Addr++)
-	{
+	{	
 		I2C_WrByte(Addr,
 				VL53L4CD_DEFAULT_CONFIGURATION[
                                   Addr - (uint8_t)0x2D]);
 	
 	//printf("16bit:%X\n8bit:%X\n",Addr,(uint8_t)Addr);
 	}
+
+	
 	
 	running = true;
+	
+	//continue_loop = (uint8_t)0;
+
+	//}while(continue_loop == (uint8_t)1);
+
+	I2C_WrByte(VL53L4CD_SYSTEM_START, (uint8_t)0x40);
+
+	//waiting for data ready before moving on
+
+	//adding a gpio event type to wait on 
+	
+	int ret = gpiod_line_request_rising_edge_events(pinDRDY,"Consumer");
+
+	const struct timespec ts = {1,0};
+	gpiod_line_event_wait(pinDRDY, &ts);
+
+	printf("I have risen :)\n\n");
 
 	//Clearing System Interrupt
 	I2C_WrByte(VL53L4CD_SYSTEM__INTERRUPT_CLEAR, 0x01);
@@ -212,22 +260,48 @@ void VL53L4CD_API::start_recording_data()
 
 	I2C_WrWord(0x0024, 0x500);
 
-	//setting the sensor to begin recording data
-	I2C_WrByte(VL53L4CD_SYSTEM_START, (uint8_t)0x40);
+
+	VL53L4CD_SetRangeTiming_RealTime(50, 0);
 	
+
+	//setting the sensor to begin recording data
+	//I2C_WrByte(VL53L4CD_SYSTEM_START, (uint8_t)0x40);
+
+	tmp = i2c_read_conversion(VL53L4CD_INTERMEASUREMENT_MS);
+	
+	/* Sensor runs in continuous mode */
+	if(tmp == (uint8_t)0){
+
+		I2C_WrByte(VL53L4CD_SYSTEM_START, (uint8_t)0x21);
+	
+	}
+	/* Sensor runs in autonomous mode */
+	else{
+		I2C_WrByte(VL53L4CD_SYSTEM_START, (uint8_t)0x40);
+	}
+
+	for(int i=0;i<50;i++){
+		worker();
+		printf("i'm here");
+		usleep(100000);
+	}
+
 	//thr = std::thread(&VL53L4CD_API::worker,this);
-	worker();
+
+	
+	
+	//worker();
 
 }
 
-uint8_t VL53L4CD_API::I2C_WrWord(uint8_t reg, unsigned value)
+uint8_t VL53L4CD_API::I2C_WrWord(uint8_t reg, uint8_t value)
 {	
 	
 	uint8_t data_write[4];
 	data_write[0] = (reg >> 8) & 0xFF;
 	data_write[1] = reg & 0xFF;
 	data_write[2] = (value >> 8) & 0xFF;
-	data_write[3] = value & 0XFF;
+	data_write[3] = value & 0xFF;
 	long int r = write(fd_i2c,&data_write,4);
 	if(r < 0){
 		printf("%i",r);
@@ -237,10 +311,58 @@ uint8_t VL53L4CD_API::I2C_WrWord(uint8_t reg, unsigned value)
              throw "Could not read from i2c.";
 	}
 
+
 	//printf("Register:%x\nValue:%x\n",reg,value);
 	
 
 	//printf("datawrite[1]:%x\ndatawrite[2]:%x\n",data_write[1],data_write[2]);
+
+	uint16_t written_value = i2c_read_conversion(reg);
+
+	if(written_value != (uint16_t)value){
+
+		printf("oh this word is wrong\n");
+
+	}
+
+
+}
+
+uint8_t VL53L4CD_API::I2C_Wr_four_bytes(uint8_t reg, uint32_t value)
+{	
+	
+	uint8_t data_write[6];
+	data_write[0] = (reg >> 8) & 0xFF;
+	data_write[1] = reg & 0xFF;
+	data_write[2] = (value >> 24) & 0xFF;
+	data_write[3] = (value >> 16) & 0xFF;
+	data_write[4] = (value >> 8) & 0xFF;
+	data_write[5] = value & 0xFF;
+	long int r = write(fd_i2c,&data_write,6);
+
+	printf("you are writing a 32 bit number of; %x\n\n",value);
+	if(r < 0){
+		printf("%i",r);
+	#ifdef DEBUG
+                fprintf(stderr,"Could not read word from %02x. ret=%d.\n",address,r);
+	#endif
+             throw "Could not read from i2c.";
+	}
+
+
+	//printf("Register:%x\nValue:%x\n",reg,value);
+	
+
+	//printf("datawrite[1]:%x\ndatawrite[2]:%x\n",data_write[1],data_write[2]);
+
+	uint16_t written_value = i2c_read_conversion(reg);
+
+	if(written_value != (uint32_t)value){
+
+		printf("oh these 4 bytes are wrong\n");
+
+	}
+
 
 }
 
@@ -250,7 +372,7 @@ uint8_t VL53L4CD_API::I2C_WrByte(uint8_t reg, unsigned value)
 	uint8_t data_write[3];
 	data_write[0] = (reg >> 8) & 0xFF;
 	data_write[1] = reg & 0xFF;
-	data_write[2] = value & 0XFF;
+	data_write[2] = value & 0xFF;
 	long int r = write(fd_i2c,&data_write,3);
 	if(r < 0){
 		printf("%i",r);
@@ -264,6 +386,16 @@ uint8_t VL53L4CD_API::I2C_WrByte(uint8_t reg, unsigned value)
 	
 
 	//printf("datawrite[1]:%x\ndatawrite[2]:%x\n",data_write[1],data_write[2]);
+
+	uint8_t written_value = i2c_read_Byte(reg);
+
+	if(written_value != value){
+
+		printf("oh this byte could be wrong:%x\n",reg);
+		printf("\nyou wanted to write:%x\nI read:%x\nSorry:(\n\n",value,written_value);
+
+	}
+
 
 }
 
@@ -289,7 +421,7 @@ void VL53L4CD_API::stop_recording_data(){
 
 void VL53L4CD_API::worker()
 {
-	while(running) {
+	//while(running) {
 
 		//timespec with constant timeout duration
 		const struct timespec ts = {1,0};
@@ -297,15 +429,15 @@ void VL53L4CD_API::worker()
 		struct gpiod_line_event event;
 		gpiod_line_event_read(pinDRDY, &event);
 		DataReady();
-	}
+	//}
 }
 
 int VL53L4CD_API::i2c_read_conversion(uint8_t reg){
 
 	uint8_t data_array[2];
-	data_array[0] = (reg>>8) && 0xFF;
+	data_array[0] = (reg>>8) & 0xFF;
 	data_array[1] = reg & 0xFF;
-	write(fd_i2c,&data_array,2);
+	write(fd_i2c,data_array,2);
 
 
 	uint8_t read_data[2];
@@ -318,14 +450,112 @@ int VL53L4CD_API::i2c_read_conversion(uint8_t reg){
 	#endif
                 throw "Could not read from i2c.";
 	}
+
 	return (((unsigned)(read_data[0])) << 8) | ((unsigned)(read_data[1]));
-	
+
 };
 
-void VL53L4CD_API::VL53L4CD_SetRangeTiming_RealTime(int fd_i2c,
+int VL53L4CD_API::i2c_read_Byte(uint8_t reg){
+
+	uint8_t data_array[2];
+	data_array[0] = (reg>>8) & 0xFF;
+	data_array[1] = reg & 0xFF;
+	write(fd_i2c,data_array,2);
+
+
+	uint8_t read_data[1];
+    long int r = read(fd_i2c, read_data, 1);
+
+
+	if(r < 0){
+	#ifdef DEBUG
+               fprintf(stderr,"Could not read word from %02x. ret=%d.\n",address,r);
+	#endif
+                throw "Could not read from i2c.";
+	}
+
+	return ((uint8_t)(read_data[0]));
+
+
+
+};
+
+void VL53L4CD_API::VL53L4CD_SetRangeTiming_RealTime(
 		uint32_t timing_budget_ms,
 		uint32_t inter_measurement_ms)
 {
+	uint16_t clock_pll, osc_frequency, ms_byte;
+	uint32_t macro_period_us = 0, timing_budget_us = 0, ls_byte, tmp;
+	float_t inter_measurement_factor = (float_t)1.055;
+
+	if(osc_frequency != (uint16_t)0)
+	{
+		timing_budget_us = timing_budget_ms*(uint32_t)1000;
+		macro_period_us = (uint32_t)((uint32_t)2304 *
+		((uint32_t)0x40000000 / (uint32_t)osc_frequency)) >> 6;
+	}
+	else
+	{
+		printf("\nRead Conversion Fail\n");
+	}
+
+	//Timing budget check validity 
+	if ((timing_budget_ms < (uint32_t)10) 
+			|| (timing_budget_ms > (uint32_t)200))
+	{
+		printf("\nTiming Budget Fail\n");
+	}
+	//Sensor runs in continuous mode
+	else if(inter_measurement_ms == (uint32_t)0)
+	{
+		I2C_Wr_four_bytes(VL53L4CD_INTERMEASUREMENT_MS, 0);
+		printf("you have selected continuous mode\n");
+		timing_budget_us -= (uint32_t)2500;
+	}
+	//Sensor runs in autonomous low power mode
+	else if(inter_measurement_ms > timing_budget_ms)
+	{	
+		printf("you have selected autonomous low power mode\n");
+		clock_pll = i2c_read_conversion(
+				VL53L4CD_RESULT__OSC_CALIBRATE_VAL);
+		clock_pll = clock_pll & (uint16_t)0x3FF;
+				inter_measurement_factor = inter_measurement_factor
+				  * (float_t)inter_measurement_ms
+				  * (float_t)clock_pll;
+		I2C_Wr_four_bytes(VL53L4CD_INTERMEASUREMENT_MS,
+				(uint32_t)inter_measurement_factor);
+
+		timing_budget_us -= (uint32_t)4300;
+		timing_budget_us /= (uint32_t)2;
+
+	}
+
+		ms_byte = 0;
+		timing_budget_us = timing_budget_us << 12;
+		tmp = macro_period_us*(uint32_t)16;
+		ls_byte = ((timing_budget_us + ((tmp >> 6)>>1)) /(tmp>> 6))
+			- (uint32_t)1;
+
+		while ((ls_byte & 0xFFFFFF00U) > 0U) {
+					 ls_byte = ls_byte >> 1;
+					 ms_byte++;
+			}
+		ms_byte = (uint16_t)(ms_byte << 8)
+		+ (uint16_t) (ls_byte & (uint32_t)0xFF);
+		I2C_WrWord(VL53L4CD_RANGE_CONFIG_A,ms_byte);
+
+		ms_byte = 0;
+		tmp = macro_period_us*(uint32_t)12;
+		ls_byte = ((timing_budget_us + ((tmp >> 6)>>1)) /(tmp>> 6))
+			- (uint32_t)1;
+
+		while ((ls_byte & 0xFFFFFF00U) > 0U) {
+				 ls_byte = ls_byte >> 1;
+				 ms_byte++;
+		}
+		ms_byte = (uint16_t)(ms_byte << 8)
+		+ (uint16_t) (ls_byte & (uint32_t)0xFF);
+		I2C_WrWord(VL53L4CD_RANGE_CONFIG_B,ms_byte);
 
 }
 

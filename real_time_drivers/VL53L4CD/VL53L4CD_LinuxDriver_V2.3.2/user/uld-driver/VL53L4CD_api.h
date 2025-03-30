@@ -458,10 +458,15 @@ private:
 
 
 	//function to write a 2 byte long word to a register 
-	uint8_t I2C_WrWord(uint8_t reg,unsigned value);
+	uint8_t I2C_WrWord(uint8_t reg,uint8_t value);
 
 	//function to write a single byte to a register
 	uint8_t I2C_WrByte(uint8_t reg, unsigned value);
+
+	//function to write a 32 bit number to a 16 bit register
+	uint8_t I2C_Wr_four_bytes(uint8_t reg, uint32_t value);
+
+	int i2c_read_Byte(uint8_t reg);
 
 	//function to read data when data ready pin is high
 	void DataReady();
@@ -470,7 +475,7 @@ private:
 	void worker();
 
 	//function to set range timing 
-	void VL53L4CD_SetRangeTiming_RealTime(int fd_i2c,uint32_t timing_budget_ms,
+	void VL53L4CD_SetRangeTiming_RealTime(uint32_t timing_budget_ms,
 		uint32_t inter_measurement_ms);
 
 };
