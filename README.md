@@ -36,7 +36,6 @@ This GitHub repository showcases a real-time embedded systems project focused on
 
 ```
 apt-get install cmake
-apt-get install cmake
 ```
 
 ## Building 
@@ -46,7 +45,10 @@ The following commands can be executed to build the exectuables. This requires C
 cmake .
 make
 ```
-This will generate the following executables:
+This will create executables stored in the following folders for testing of each sensor: 
+
+- /src/VL53L4CD  (TOF Sensor)
+- /src/DS18B20_TempSensor (Temperature Sensor)
 
 ### Running Software Tests
 
@@ -78,4 +80,4 @@ Thank you to Bernd Porr for providing us with the opportunity to work on this pr
 Company Email: c0ffee.embedded@gmail.com
 
 ## Last Updated
-This README was last updated on 13/03/2025.
+This README was last updated on 02/04/2025.
