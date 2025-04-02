@@ -46,9 +46,9 @@ int example1()
 	/*********************************/
 
 	/* Default VL53L4CD I2C address */
-	dev->address = 0x52;
+	//dev->address = 0x52;
 
-	printf("%u\n",(unsigned int)dev->address);
+	//printf("%u\n",(unsigned int)dev->address);
 
 
 	/* (Optional) Change I2C address */
@@ -88,7 +88,7 @@ int example1()
 	/*         Ranging loop          */
 	/*********************************/
 
-	loop = 0;
+	//loop = 0;
 	VL53L4CD.start_recording_data();
 
 	//status = VL53L4CD.VL53L4CD_StartRanging(dev);
@@ -118,10 +118,9 @@ int example1()
 	
 	//}
 
-	getchar();
 	VL53L4CD.stop_recording_data();
 
 	//status = VL53L4CD.VL53L4CD_StopRanging(dev);
 	printf("End of ULD demo\n");
-	return status;
+	//return status;
 }

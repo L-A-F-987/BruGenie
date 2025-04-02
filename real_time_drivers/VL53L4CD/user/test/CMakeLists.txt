@@ -6,7 +6,6 @@ project(VL53L4CD_tests VERSION 1.0.0 LANGUAGES CXX)
 
 
 
-add_executable(VL53L4CD_tests menu.cpp)
+add_executable(VL53L4CD_test_executable menu.cpp)
 
-
-target_link_libraries(VL53L4CD_tests PRIVATE LIB_PLATFORM)
+target_link_libraries(VL53L4CD_test_executable PRIVATE LIB_test_cpps)
