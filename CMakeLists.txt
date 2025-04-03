@@ -16,7 +16,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/VL53L4CD/user/test)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/DS18B20_TempSensor)
 
 ##subdirectory containing the weight sensor code 
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/ADS1115_Weight_Sensor)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/src/ADS1115_Weight_Sensor)
 
 
 ##subdirectory containing the motor code
