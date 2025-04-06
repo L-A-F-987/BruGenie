@@ -1,4 +1,4 @@
-# BruGenie - "Coffee Anyway You Wish"
+# BruGenie - "Coffee Any Way You Wish"
 
 <img width="400" alt="image" src="Images/BruGenie Black + White.svg">
 
