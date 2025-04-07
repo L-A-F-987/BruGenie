@@ -215,7 +215,7 @@ void VL53L4CD_API::start_recording_data()
 		usleep(1000);
 	}while(continue_loop == (uint8_t)1);
 
-
+	printf("interrupt setting register:%x\n\n",i2c_read_Byte(0x87));
 	//setting up sensor configuration
 	for (Addr = (uint16_t)0x2D; Addr <= (uint16_t)0x87; Addr++)
 	{	
@@ -226,7 +226,7 @@ void VL53L4CD_API::start_recording_data()
 	//printf("16bit:%X\n8bit:%X\n",Addr,(uint8_t)Addr);
 	}
 
-	
+	printf("interrupt setting register:%x\n\n",i2c_read_Byte(0x87));
 	
 	running = true;
 	
@@ -234,10 +234,11 @@ void VL53L4CD_API::start_recording_data()
 
 	//}while(continue_loop == (uint8_t)1);
 
-	I2C_WrByte(VL53L4CD_SYSTEM_START, (uint8_t)0x40);
+	printf("first start %x and interrupt%x\n",i2c_read_Byte(VL53L4CD_SYSTEM_START),i2c_read_Byte(VL53L4CD_SYSTEM__INTERRUPT_CLEAR));
 
-	//Clearing System Interrupt
-	I2C_WrByte(VL53L4CD_SYSTEM__INTERRUPT_CLEAR, (uint8_t)0x01);
+	I2C_WrByte(0x87, (uint8_t)0x40);
+
+	printf("first start %x and interrupt%x\n",i2c_read_Byte(VL53L4CD_SYSTEM_START),i2c_read_Byte(VL53L4CD_SYSTEM__INTERRUPT_CLEAR));	
 
 	//waiting for data ready before moving on
 
@@ -245,26 +246,43 @@ void VL53L4CD_API::start_recording_data()
 	
 	int ret = gpiod_line_request_rising_edge_events(pinDRDY,"Consumer");
 
-	const struct timespec ts = {1,0};
-	gpiod_line_event_wait(pinDRDY, &ts);
+	I2C_WrByte(0x86, 0x01);
+
+	printf("first start and interrupt%x\n",i2c_read_Byte(VL53L4CD_SYSTEM_START));
 
 	printf("I have risen :)\n\n");
 
+	printf("I Shall Interrupt :)\n\n");
+
+	I2C_WrByte(0x86, 0x01);
+
 	//Clearing System Interrupt
-	I2C_WrByte(VL53L4CD_SYSTEM__INTERRUPT_CLEAR, (uint8_t)0x01);
+
+
+	printf("1 :)\n\n");
 
 	//stopping ranging
-	I2C_WrByte(VL53L4CD_SYSTEM_START, (uint8_t)0x80);
+	I2C_WrByte(0x87, (uint8_t)0x80);
+
+
 
 	//setting ????
 	I2C_WrByte(VL53L4CD_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND,(uint8_t)0x09);
 
+
+
 	I2C_WrByte(0x0B, (uint8_t)0);
+
+
 
 	I2C_WrWord(0x0024, (uint8_t)0x500);
 
 
-	VL53L4CD_SetRangeTiming_RealTime(50, 0);
+
+
+
+	VL53L4CD_SetRangeTiming_RealTime(50,0);
+
 	
 
 	//setting the sensor to begin recording data
@@ -272,27 +290,28 @@ void VL53L4CD_API::start_recording_data()
 
 	tmp = i2c_read_conversion(VL53L4CD_INTERMEASUREMENT_MS);
 	
-	/* Sensor runs in continuous mode */
+	///* Sensor runs in continuous mode */
 	if(tmp == (uint8_t)0){
 
-		I2C_WrByte(VL53L4CD_SYSTEM_START, (uint8_t)0x21);
+		I2C_WrByte(0x87, (uint8_t)0x21);
 	
 	}
 	/* Sensor runs in autonomous mode */
 	else{
-		I2C_WrByte(VL53L4CD_SYSTEM_START, (uint8_t)0x40);
+		I2C_WrByte(0x87, (uint8_t)0x40);
 	}
 
-	I2C_WrByte(VL53L4CD_SYSTEM__INTERRUPT_CLEAR, (uint16_t)0x01);
-
+	/*
 	for(int i=0;i<50;i++){
-		worker();
-		printf("i'm here");
+		I2C_WrByte(0x86, 0x01);
+		//worker();
 		usleep(100000);
 	}
+	*/
 
+	I2C_WrByte(0x86, 0x01);
 	//thr = std::thread(&VL53L4CD_API::worker,this);
-
+	worker();
 	
 	
 	//worker();
@@ -396,7 +415,7 @@ uint8_t VL53L4CD_API::I2C_WrByte(uint16_t reg, uint8_t value)
 	uint8_t data_write[3];
 	data_write[0] = (reg >> 8) & 0xFF;
 	data_write[1] = reg & 0xFF;
-	data_write[2] = value & 0xFF;
+	data_write[2] = value;
 	long int r = write(fd_i2c,&data_write,3);
 	if(r < 0){
 		printf("%i",r);
@@ -411,13 +430,13 @@ uint8_t VL53L4CD_API::I2C_WrByte(uint16_t reg, uint8_t value)
 
 	uint8_t written_value = i2c_read_Byte(reg);
 
-	if(written_value != value){
+	//if(written_value != value){
 
-		printf("\noh this byte could be wrong:%x\n",reg);
-		printf("you wanted to write:%x\nI read:%x\n",value,written_value);
-		printf("here's what I have stored in array element[0],[1].[2] :%x,%x,%x\n\n",data_write[0],data_write[1],data_write[2]);
+	//	printf("\noh this byte could be wrong:%x\n",reg);
+	//	printf("you wanted to write:%x\nI read:%x\n",value,written_value);
+	//	printf("here's what I have stored in array element[0],[1].[2] :%x,%x,%x\n\n",data_write[0],data_write[1],data_write[2]);
 
-	}
+	//}
 
 	//if (written_value != original_value){
 
@@ -432,9 +451,9 @@ uint8_t VL53L4CD_API::I2C_WrByte(uint16_t reg, uint8_t value)
 void VL53L4CD_API::DataReady(){
 	//	printf("I Have Data For You\n");
 	uint16_t v = i2c_read_conversion(VL53L4CD_RESULT__DISTANCE);
-	for(auto &cb: adsCallbackInterface){
-		cb -> hasVL53L4CDSample(v);
-	}
+	//for(auto &cb: adsCallbackInterface){
+	//	cb -> hasVL53L4CDSample(v);
+	//}
 
 	printf("%u\n",v);
 }
@@ -449,16 +468,21 @@ void VL53L4CD_API::stop_recording_data(){
 }
 
 void VL53L4CD_API::worker()
-{
-	//while(running) {
+{	
+	printf("i'm here");
 
+	//int ret = gpiod_line_request_falling_edge_events(pinDRDY,"Consumer");
+	while(running) {
+		I2C_WrByte(0x86, 0x01);
 		//timespec with constant timeout duration
 		const struct timespec ts = {1,0};
 		gpiod_line_event_wait(pinDRDY, &ts);
 		struct gpiod_line_event event;
 		gpiod_line_event_read(pinDRDY, &event);
+		//usleep(1000);
 		DataReady();
-	//}
+	}
+	
 }
 
 int VL53L4CD_API::i2c_read_conversion(uint8_t reg){

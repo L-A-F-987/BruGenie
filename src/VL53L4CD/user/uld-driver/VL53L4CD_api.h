@@ -442,7 +442,7 @@ private:
 	struct gpiod_line *pinDRDY = nullptr;
 	struct gpiod_chip *chipDRDY = nullptr;
 
-	std::thread thr;
+	//std::thread thr;
 
 	int i2c_read_conversion(uint8_t reg);
 
