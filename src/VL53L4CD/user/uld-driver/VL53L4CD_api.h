@@ -81,7 +81,7 @@ typedef uint8_t VL53L4CD_Error;
 
 //defining the default chip and interrupt pins
 #define drdy_chip 4
-#define Default_interrupt_pin 8;
+#define Default_interrupt_pin 14;
 
 /**
  *  @brief defines Software Version
@@ -442,7 +442,7 @@ private:
 	struct gpiod_line *pinDRDY = nullptr;
 	struct gpiod_chip *chipDRDY = nullptr;
 
-	//std::thread thr;
+	std::thread thr;
 
 	int i2c_read_conversion(uint8_t reg);
 

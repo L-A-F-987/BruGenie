@@ -243,23 +243,24 @@ void VL53L4CD_API::start_recording_data()
 	//waiting for data ready before moving on
 
 	//adding a gpio event type to wait on 
-	
-	int ret = gpiod_line_request_rising_edge_events(pinDRDY,"Consumer");
 
 	I2C_WrByte(0x86, 0x01);
 
-	printf("first start and interrupt%x\n",i2c_read_Byte(VL53L4CD_SYSTEM_START));
+	//printf("first start and interrupt%x\n",i2c_read_Byte(VL53L4CD_SYSTEM_START));
 
-	printf("I have risen :)\n\n");
+	//printf("I have risen :)\n\n");
 
-	printf("I Shall Interrupt :)\n\n");
+	//printf("I Shall Interrupt :)\n\n");
 
-	I2C_WrByte(0x86, 0x01);
+	int ret = gpiod_line_request_falling_edge_events(pinDRDY,"Consumer");
+	const struct timespec ts = {1,0};
+	gpiod_line_event_wait(pinDRDY, &ts);
+	struct gpiod_line_event event;
+	gpiod_line_event_read(pinDRDY, &event);
+
 
 	//Clearing System Interrupt
-
-
-	printf("1 :)\n\n");
+	I2C_WrByte(0x86, 0x01);
 
 	//stopping ranging
 	I2C_WrByte(0x87, (uint8_t)0x80);
@@ -281,7 +282,7 @@ void VL53L4CD_API::start_recording_data()
 
 
 
-	VL53L4CD_SetRangeTiming_RealTime(50,0);
+	VL53L4CD_SetRangeTiming_RealTime(200,0);
 
 	
 
@@ -301,20 +302,10 @@ void VL53L4CD_API::start_recording_data()
 		I2C_WrByte(0x87, (uint8_t)0x40);
 	}
 
-	/*
-	for(int i=0;i<50;i++){
-		I2C_WrByte(0x86, 0x01);
-		//worker();
-		usleep(100000);
-	}
-	*/
 
 	I2C_WrByte(0x86, 0x01);
-	//thr = std::thread(&VL53L4CD_API::worker,this);
-	worker();
-	
-	
-	//worker();
+	thr = std::thread(&VL53L4CD_API::worker,this);
+
 
 }
 
@@ -461,7 +452,7 @@ void VL53L4CD_API::DataReady(){
 void VL53L4CD_API::stop_recording_data(){
 	if(!running) return;
 	running = false;
-	//thr.join();
+	thr.join();
 	gpiod_line_release(pinDRDY);
 	gpiod_chip_close(chipDRDY);
 	close(fd_i2c);
@@ -470,16 +461,16 @@ void VL53L4CD_API::stop_recording_data(){
 void VL53L4CD_API::worker()
 {	
 	printf("i'm here");
-
-	//int ret = gpiod_line_request_falling_edge_events(pinDRDY,"Consumer");
+	I2C_WrByte(0x86, 0x01);
+	int ret = gpiod_line_request_falling_edge_events(pinDRDY,"Consumer");
 	while(running) {
-		I2C_WrByte(0x86, 0x01);
+
 		//timespec with constant timeout duration
+		I2C_WrByte(0x86, 0x01);
 		const struct timespec ts = {1,0};
 		gpiod_line_event_wait(pinDRDY, &ts);
 		struct gpiod_line_event event;
 		gpiod_line_event_read(pinDRDY, &event);
-		//usleep(1000);
 		DataReady();
 	}
 	
@@ -561,7 +552,7 @@ void VL53L4CD_API::VL53L4CD_SetRangeTiming_RealTime(
 	//Sensor runs in continuous mode
 	else if(inter_measurement_ms == (uint32_t)0)
 	{
-		I2C_Wr_four_bytes(VL53L4CD_INTERMEASUREMENT_MS, 0);
+		I2C_WrWord(VL53L4CD_INTERMEASUREMENT_MS, 0);
 		printf("you have selected continuous mode\n");
 		timing_budget_us -= (uint32_t)2500;
 	}
@@ -575,7 +566,7 @@ void VL53L4CD_API::VL53L4CD_SetRangeTiming_RealTime(
 				inter_measurement_factor = inter_measurement_factor
 				  * (float_t)inter_measurement_ms
 				  * (float_t)clock_pll;
-		I2C_Wr_four_bytes(VL53L4CD_INTERMEASUREMENT_MS,
+		I2C_WrWord(VL53L4CD_INTERMEASUREMENT_MS,
 				(uint32_t)inter_measurement_factor);
 
 		timing_budget_us -= (uint32_t)4300;

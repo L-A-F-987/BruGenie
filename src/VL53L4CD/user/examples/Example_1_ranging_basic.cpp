@@ -117,7 +117,8 @@ int example1()
 		//}
 	
 	//}
-
+	getchar();
+	getchar();
 	VL53L4CD.stop_recording_data();
 
 	//status = VL53L4CD.VL53L4CD_StopRanging(dev);
