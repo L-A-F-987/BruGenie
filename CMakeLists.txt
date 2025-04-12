@@ -13,14 +13,17 @@ enable_testing()
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/VL53L4CD/user/test)
 
 ##subdirectory containing the temperature sensor code
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/DS18B20_TempSensor)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/src/DS18B20_TempSensor)
 
 ##subdirectory containing the weight sensor code 
-#add_subdirectory(${CMAKE_SOURCE_DIR}/src/ADS1115_Weight_Sensor)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/ADS1115_Weight_Sensor)
+
+##subdirectory containing a simple wrapper for switching on and off the solenoids
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/Control_pins)
 
 
 ##subdirectory containing the motor code
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/motor)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/src/motor)
 
 ##compile options to check the code 
 add_compile_options(-Wall -Wconversion -Wextra -pedantic)
