@@ -12,6 +12,7 @@ int Pin_Control::start(int pin_number){
     pinGPIO= gpiod_chip_get_line(chipGPIO,pin_number);
 
     int ret = gpiod_line_request_output(pinGPIO,"consumer",0);
+
     
     int x = 0;
 
