@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "../uld-driver/VL53L4CD_api.h"
 
 int example1()
@@ -89,6 +90,7 @@ int example1()
 	/*********************************/
 
 	//loop = 0;
+	VL53L4CD.boot_sensor();
 	VL53L4CD.start_recording_data();
 
 	//status = VL53L4CD.VL53L4CD_StartRanging(dev);
@@ -119,6 +121,8 @@ int example1()
 	//}
 	getchar();
 	getchar();
+	//VL53L4CD.stop_sensor_ranging();
+	usleep(1000);
 	VL53L4CD.stop_recording_data();
 
 	//status = VL53L4CD.VL53L4CD_StopRanging(dev);

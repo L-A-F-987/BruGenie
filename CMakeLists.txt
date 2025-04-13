@@ -23,7 +23,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/Control_pins)
 
 
 ##subdirectory containing the motor code
-#add_subdirectory(${CMAKE_SOURCE_DIR}/src/motor)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/motor)
 
 ##compile options to check the code 
 add_compile_options(-Wall -Wconversion -Wextra -pedantic)

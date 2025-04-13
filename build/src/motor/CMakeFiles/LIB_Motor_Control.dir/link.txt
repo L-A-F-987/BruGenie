@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -shared -Wl,-soname,libLIB_Motor_Control.so -o libLIB_Motor_Control.so CMakeFiles/LIB_Motor_Control.dir/Parallax_INC4_Servo_motor.cpp.o 

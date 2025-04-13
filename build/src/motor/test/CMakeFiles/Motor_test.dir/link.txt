@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/Motor_test.dir/Motor_test.cpp.o -o Motor_test  -Wl,-rpath,/home/MMTTL_EMBEDDED/Documents/BruGenie/build/src/motor ../libLIB_Motor_Control.so 
