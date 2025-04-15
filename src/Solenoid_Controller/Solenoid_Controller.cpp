@@ -1,4 +1,4 @@
-#include "Pin_Test"
+
 #include "Solenoid_Controller.h"
 
 #include <unistd.h>
@@ -7,7 +7,7 @@
 void Solenoid_Controller::start(){
 
     solenoid_1.start(default_solenoid_1_pin);
-    solenoid_1.start(default_solenoid_2_pin);
+    solenoid_2.start(default_solenoid_2_pin);
 
 };
 
@@ -17,7 +17,7 @@ void Solenoid_Controller::stop(){
     solenoid_2.off();
 
     solenoid_1.stop();
-    solenoid_1.stop();
+    solenoid_2.stop();
 };
 
 void Solenoid_Controller::Open_solenoid_1(){
