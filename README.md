@@ -21,16 +21,16 @@ This GitHub repository showcases a real-time embedded systems project focused on
 
 - 2 × VL53L4CD – Time-of-Flight Sensors
 - 1 × DS18B20 – Temperature Sensor
-- 1 × TE Connectivity – Load Cell
-- 1 × ADS1115 – 16-Bit ADC
+- 1 × AC/DC Power Supply
+- 2 x Solenoid Valve ST-SA series Normally Closed
 - 1 × Parallax Inc Servo Motor – 4–6V, 50 RPM, 27 N·cm Max Output Torque
 
 ### Additional Components
 
-- 1 × PTC Heating Element
+- 1 × Microswitch
 - 1 × 10mm Lead Screw
 - 1 × Igus Flanged Round Nut – 10mm
-- 1 × Russell Hobbs Coffee Machine
+- 1 x Liquid Reservoir 
 
 ### Libraries
 
