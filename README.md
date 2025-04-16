@@ -21,16 +21,15 @@ This GitHub repository showcases a real-time embedded systems project focused on
 
 - 2 × VL53L4CD – Time-of-Flight Sensors
 - 1 × DS18B20 – Temperature Sensor
-- 1 × TE Connectivity – Load Cell
-- 1 × ADS1115 – 16-Bit ADC
 - 1 × Parallax Inc Servo Motor – 4–6V, 50 RPM, 27 N·cm Max Output Torque
 
 ### Additional Components
 
-- 1 × PTC Heating Element
+- 2 × Solenoid Valve ST-SA Series Normally Closed
+- 1 x AC/DC Power Supply
 - 1 × 10mm Lead Screw
 - 1 × Igus Flanged Round Nut – 10mm
-- 1 × Russell Hobbs Coffee Machine
+- 1 × Liquid Retainer
 
 ### Libraries
 
@@ -49,6 +48,8 @@ This will create executables stored in the following folders for testing of each
 
 - /src/VL53L4CD  (TOF Sensor)
 - /src/DS18B20_TempSensor (Temperature Sensor)
+- /src/Solenoid_Controller (Solenoid Control)
+- /src/motor (Servo Motor Control)
 
 ### Running Software Tests
 
@@ -80,4 +81,4 @@ Thank you to Bernd Porr for providing us with the opportunity to work on this pr
 Company Email: c0ffee.embedded@gmail.com
 
 ## Last Updated
-This README was last updated on 02/04/2025.
+This README was last updated on 16/04/2025.
