@@ -10,12 +10,6 @@
   ******************************************************************************
   */
 
-
-/**
- * @file  vl53l4cd_api.c
- * @brief Functions implementation
- */
-
 #include <string.h>
 #include <math.h>
 #include <thread>
@@ -26,6 +20,12 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+
+
+/**
+ * @file  vl53l4cd_api.c
+ * @brief Functions implementation
+ */
 
 
 
@@ -229,10 +229,6 @@ void VL53L4CD_API::boot_sensor()
 	printf("interrupt setting register:%x\n\n",i2c_read_Byte(0x87));
 	
 	running = true;
-	
-	//continue_loop = (uint8_t)0;
-
-	//}while(continue_loop == (uint8_t)1);
 
 	printf("first start %x and interrupt%x\n",i2c_read_Byte(VL53L4CD_SYSTEM_START),i2c_read_Byte(VL53L4CD_SYSTEM__INTERRUPT_CLEAR));
 
@@ -241,7 +237,6 @@ void VL53L4CD_API::boot_sensor()
 	printf("first start %x and interrupt%x\n",i2c_read_Byte(VL53L4CD_SYSTEM_START),i2c_read_Byte(VL53L4CD_SYSTEM__INTERRUPT_CLEAR));	
 
 	//waiting for data ready before moving on
-
 	//adding a gpio event type to wait on 
 
 	I2C_WrByte(0x86, 0x01);
@@ -294,7 +289,6 @@ void VL53L4CD_API::start_recording_data(){
 }
 
 void VL53L4CD_API::DataReady(){
-	//	printf("I Have Data For You\n");
 	uint16_t v = i2c_read_conversion(VL53L4CD_RESULT__DISTANCE);
 	//for(auto &cb: adsCallbackInterface){
 	//	cb -> hasVL53L4CDSample(v);
@@ -316,7 +310,7 @@ void VL53L4CD_API::stop_recording_data(){
 
 void VL53L4CD_API::worker()
 {	
-	printf("i'm here");
+	//clearing  interrupt
 	I2C_WrByte(0x86, 0x01);
 	int ret = gpiod_line_request_falling_edge_events(pinDRDY,"Consumer");
 	while(running) {
@@ -341,7 +335,7 @@ void VL53L4CD_API::stop_sensor_ranging(){
 uint8_t VL53L4CD_API::I2C_WrWord(uint16_t reg, uint16_t value)
 {	
 
-	uint8_t original_value = i2c_read_conversion(reg);
+	//uint8_t original_value = i2c_read_conversion(reg);
 	
 	uint8_t data_write[4];
 	data_write[0] = (reg >> 8) & 0xFF;
@@ -359,15 +353,6 @@ uint8_t VL53L4CD_API::I2C_WrWord(uint16_t reg, uint16_t value)
 
 
 	uint16_t written_value = i2c_read_conversion(reg);
-
-	if(written_value != (uint16_t)value){
-
-		printf("oh this word is wrong\n");
-
-	}
-
-
-
 
 }
 
