@@ -15,7 +15,33 @@ This GitHub repository showcases a real-time embedded systems project focused on
 ## Prerequisites
 ### Microcontroller
 
-- Rasberry PI 5
+- Raspberry PI 5
+- 
+### Sensors
+
+- 2 × VL53L4CD – Time-of-Flight Sensors
+- 1 × DS18B20 – Temperature Sensor
+<<<<<<< VL53L4CD_multiple
+=======
+- 1 × AC/DC Power Supply
+- 2 x Solenoid Valve ST-SA series Normally Closed
+>>>>>>> main
+- 1 × Parallax Inc Servo Motor – 4–6V, 50 RPM, 27 N·cm Max Output Torque
+
+### Additional Components
+
+<<<<<<< VL53L4CD_multiple
+- 2 × Solenoid Valve ST-SA Series Normally Closed
+- 1 x AC/DC Power Supply
+- 1 × 10mm Lead Screw
+- 1 × Igus Flanged Round Nut – 10mm
+- 1 × Liquid Retainer
+=======
+- 1 × Microswitch
+- 1 × 10mm Lead Screw
+- 1 × Igus Flanged Round Nut – 10mm
+- 1 x Liquid Reservoir 
+>>>>>>> main
 
 ### Libraries
 
