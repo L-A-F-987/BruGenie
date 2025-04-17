@@ -6,10 +6,6 @@
 #include <thread>
 #include <vector>
 
-
-
-
-
 /**
  *  @brief Driver version
  */
@@ -122,7 +118,7 @@ class VL53L4CD_API{
 public:
 
 	//function to boot the sensor
-	void boot_sensor();
+	void boot_sensor(uint8_t address, int interrupt_pin);
 
 	//function to set the sensor to stop recording data internally 
 	void stop_sensor_ranging();

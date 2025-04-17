@@ -145,9 +145,9 @@ static const uint8_t VL53L4CD_DEFAULT_CONFIGURATION[] = {
 
 //Interrupt Based Callback
 
-void VL53L4CD_API::boot_sensor()
+void VL53L4CD_API::boot_sensor(uint8_t address, int interrupt_pin)
 {	
-	interrupt_pin = Default_interrupt_pin;
+	//interrupt_pin = Default_interrupt_pin;
 	chip = drdy_chip;
 
 	uint8_t Addr;
