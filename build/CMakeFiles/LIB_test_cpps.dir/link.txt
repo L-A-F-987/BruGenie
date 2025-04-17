@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -shared -Wl,-soname,libLIB_test_cpps.so -o libLIB_test_cpps.so CMakeFiles/LIB_test_cpps.dir/src/VL53L4CD/user/examples/Example_1_ranging_basic.cpp.o CMakeFiles/LIB_test_cpps.dir/src/VL53L4CD/user/examples/Example_2_low_power.cpp.o  -Wl,-rpath,/home/MMTTL_EMBEDDED/Documents/BruGenie/build libLIB_uld_driver.so -lgpiod 

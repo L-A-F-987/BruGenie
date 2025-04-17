@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/VL53L4CD_test_executable.dir/menu.cpp.o -o VL53L4CD_test_executable  -Wl,-rpath,/home/MMTTL_EMBEDDED/Documents/BruGenie/build ../../../../libLIB_test_cpps.so ../../../../libLIB_uld_driver.so -lgpiod 

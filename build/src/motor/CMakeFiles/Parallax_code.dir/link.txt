@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/Parallax_code.dir/Parallax_INC4_Servo_motor.cpp.o -o Parallax_code 

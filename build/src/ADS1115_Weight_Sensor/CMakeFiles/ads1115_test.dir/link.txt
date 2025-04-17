@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/ads1115_test.dir/ADS1115.cpp.o -o ads1115_test  libads1115rpi_static.a -lgpiod 

@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/Pin_test.dir/Pin_Test.cpp.o -o Pin_test  -Wl,-rpath,/home/MMTTL_EMBEDDED/Documents/BruGenie/build/src/Control_pins ../libLIB_Pin_Control.so -lgpiod 

@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/gpio_write_test.dir/gpio_write_test.cpp.o -o gpio_write_test  -lgpiod 

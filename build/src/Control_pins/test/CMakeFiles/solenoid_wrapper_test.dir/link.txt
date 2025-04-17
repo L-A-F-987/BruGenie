@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/solenoid_wrapper_test.dir/solenoid_wrapper_tests.cpp.o -o solenoid_wrapper_test  -Wl,-rpath,/home/MMTTL_EMBEDDED/Documents/BruGenie/build/src/Control_pins ../libLIB_Pin_Control.so -lgpiod 

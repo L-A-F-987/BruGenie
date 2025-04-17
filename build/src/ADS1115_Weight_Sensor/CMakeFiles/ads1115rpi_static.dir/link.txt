@@ -1,2 +1,0 @@
-/usr/bin/ar qc libads1115rpi_static.a CMakeFiles/ads1115rpi_static.dir/rpi_ads1115/ads1115rpi.cpp.o
-/usr/bin/ranlib libads1115rpi_static.a
