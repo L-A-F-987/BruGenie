@@ -17,20 +17,6 @@ This GitHub repository showcases a real-time embedded systems project focused on
 
 - Rasberry PI 5
 
-### Sensors
-
-- 2 × VL53L4CD – Time-of-Flight Sensors
-- 1 × DS18B20 – Temperature Sensor
-- 1 × Parallax Inc Servo Motor – 4–6V, 50 RPM, 27 N·cm Max Output Torque
-
-### Additional Components
-
-- 2 × Solenoid Valve ST-SA Series Normally Closed
-- 1 x AC/DC Power Supply
-- 1 × 10mm Lead Screw
-- 1 × Igus Flanged Round Nut – 10mm
-- 1 × Liquid Retainer
-
 ### Libraries
 
 ```
