@@ -12,10 +12,11 @@ int Pin_Control::start(int pin_number){
     pinGPIO= gpiod_chip_get_line(chipGPIO,pin_number);
 
     int ret = gpiod_line_request_output(pinGPIO,"consumer",0);
+
     
     int x = 0;
 
-    return 1;
+    return 0;
 }
 
 
@@ -25,6 +26,7 @@ int Pin_Control::on(){
 
     gpiod_line_set_value(pinGPIO,1);
 
+    return 0;
 
 }
 
@@ -32,7 +34,9 @@ int Pin_Control::off(){
 
     printf("solenoid_off\n");
 
-    gpiod_line_set_value(pinGPIO,0);
+    int ret = gpiod_line_set_value(pinGPIO,0);
+
+    return 0;
 
 
 }
@@ -43,5 +47,8 @@ int Pin_Control::stop(){
     gpiod_line_release(pinGPIO);
 	gpiod_chip_close(chipGPIO);
 
+    return 0;
 
 }
+
+
