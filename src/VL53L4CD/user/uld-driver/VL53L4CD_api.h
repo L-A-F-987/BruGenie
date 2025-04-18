@@ -130,12 +130,12 @@ public:
 	void stop_recording_data();
 
 	//virtual void function for use in callback
-	struct ADSCallbackInterface {
-		virtual void hasVL53L4CDSample(float sample) = 0;
+	struct VL53L4CD_Callback_Interface {
+		virtual void hasVL53L4CDSample(uint16_t sample) = 0;
 	};
 
-	void registerCallback(ADSCallbackInterface* ci) {
-		adsCallbackInterface.push_back(ci);
+	void registerCallback(VL53L4CD_Callback_Interface* ci) {
+		VL53L4CDcallbackinterface.push_back(ci);
 	};
 
 	//function to change I2C_Address
@@ -154,7 +154,7 @@ private:
 
 	int i2c_read_conversion(uint8_t reg);
 
-	std::vector<ADSCallbackInterface*> adsCallbackInterface;
+	std::vector<VL53L4CD_Callback_Interface*> VL53L4CDcallbackinterface;
 
 	int interrupt_pin;
 	int chip;

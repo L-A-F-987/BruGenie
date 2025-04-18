@@ -290,11 +290,11 @@ void VL53L4CD_API::start_recording_data(){
 
 void VL53L4CD_API::DataReady(){
 	uint16_t v = i2c_read_conversion(VL53L4CD_RESULT__DISTANCE);
-	//for(auto &cb: adsCallbackInterface){
-	//	cb -> hasVL53L4CDSample(v);
-	//}
+	
+	for(auto &cb: VL53L4CDcallbackinterface){
+		cb -> hasVL53L4CDSample(v);
+	}
 
-	printf("%u\n",v);
 }
 
 
@@ -548,6 +548,10 @@ void VL53L4CD_API::VL53L4CD_SetI2CAddress(
 	address =  new_address;
 
 
+}
+
+void hasVL53L4CDSample(uint16_t sample){
+	printf("%i\n",sample);
 }
 
 

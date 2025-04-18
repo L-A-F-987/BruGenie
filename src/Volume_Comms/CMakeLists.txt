@@ -9,6 +9,6 @@ add_library(LIB_Volume_Comms
 
 
 
-target_link_libraries(LIB_Volume_Comms LIB_Pin_Control LIB_uld_driver)
+target_link_libraries(LIB_Volume_Comms LIB_Pin_Control LIB_uld_driver LIB_Motor_Control)
 
 add_subdirectory(test)
