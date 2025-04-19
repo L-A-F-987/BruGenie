@@ -61,7 +61,7 @@ void Volume_Comms::start_sensors(){
 	TOF_1.start_recording_data();
 	TOF_2.start_recording_data();
 	
-	thr = std::thread(&Volume_Comms::Volume_Tracker, std::ref(last_TOF_1_Sample), std::ref(last_TOF_2_Sample));
+	thr = std::thread(&Volume_Comms::Volume_Tracker, this);
 	//motor.Set_motor_downwards();
 
 }
