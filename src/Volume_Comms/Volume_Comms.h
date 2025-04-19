@@ -20,6 +20,7 @@
 #define TOF_1_address (uint8_t)0x28
 #define TOF_2_address (uint8_t)0x29
 
+
 class Volume_Comms{
 
 
@@ -33,9 +34,10 @@ class Volume_Comms{
 
         float total_volume = 0;
         
+        
     private:
 
-        void Volume_Tracker();
+        void Volume_Tracker(std::atomic<int>&last_TOF_1_Sample, std::atomic<int>&last_TOF_2_Sample);
 
         VL53L4CD_API TOF_1;
         VL53L4CD_API TOF_2;
@@ -47,13 +49,11 @@ class Volume_Comms{
 
         int total_distance = 125;
 
+
         std::atomic<int> last_TOF_1_Sample;
         std::atomic<int> last_TOF_2_Sample;
 
-        //int last_TOF_2_Sample;
-
-        //int* sample_1_pointer = &last_TOF_1_Sample;
-        //int* sample_2_pointer = &last_TOF_2_Sample;
+        
 
         TOF_1callback tof_1_callback;
         TOF_2callback tof_2_callback;

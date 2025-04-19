@@ -9,13 +9,15 @@ class TOF_2callback : public VL53L4CD_API::VL53L4CD_Callback_Interface {
     virtual void hasVL53L4CDSample(uint16_t v) override {
     printf("%i\n",v);
 
-    variable = v;
+    if (variable) {
+        variable -> store(v);
+    }
 
     };
 
     public:
 
-        std::atomic<int> variable;
+        std::atomic<int>* variable;
 
 };
 
