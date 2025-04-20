@@ -33,7 +33,7 @@ int Volume_Comms::Boot_sensors()
 	x_shut_5.stop();
 	x_shut_6.stop();
 
-	usleep(1000);
+	usleep(100000);
 	TOF_2.start_recording_data();
 	TOF_2.stop_recording_data();
 
@@ -61,6 +61,8 @@ void Volume_Comms::start_sensors(){
 	TOF_1.start_recording_data();
 	TOF_2.start_recording_data();
 
+
+	usleep(1000000);
 	
 	//thr(std::ref(last_TOF_1_Sample));
 	thr = std::thread(&Volume_Comms::Volume_Tracker,this, std::ref(last_TOF_1_Sample), std::ref(last_TOF_2_Sample));
@@ -94,20 +96,36 @@ void Volume_Comms::stop_sensors(){
 
 void Volume_Comms::Volume_Tracker(std::atomic<int>&last_TOF_1_Sample, std::atomic<int>&last_TOF_2_Sample){
 
-	const struct timespec ts = {1,0};
-	gpiod_line_event_wait(pinDRDY, &ts);
-	struct gpiod_line_event event;
-	gpiod_line_event_read(pinDRDY, &event);
+	bool x = true;
+	//int ret = gpiod_line_request_falling_edge_events(pinDRDY,"Consumer");
 
-	usleep(10000000);
+	//if (ret<0){
+	//	throw;
+	//}
+	while(x){
+		const struct timespec ts = {1,0};
+		gpiod_line_event_wait(pinDRDY, &ts);
+		struct gpiod_line_event event;
+		gpiod_line_event_read(pinDRDY, &event);
 
-	int width = total_distance - last_TOF_1_Sample.load() - last_TOF_2_Sample.load();
+		usleep(1000);
+		
+		int width = total_distance - last_TOF_1_Sample.load() - last_TOF_2_Sample.load();
 
-	//printf("width:%i\nTOF_1:%i\n,TOF_2:%i\n",width);
-	printf("width %i\n",width);
-	printf("TOF1 %i\n",last_TOF_1_Sample.load());
-	total_volume += (M_PI*std::pow((float)width,2))/2;
+		if (width<1){
+			x = false;}
+		else{
 
+			//printf("width:%i\nTOF_1:%i\n,TOF_2:%i\n",width);
+			printf("width %i\n",width);
+			printf("TOF1 %i\n",last_TOF_1_Sample.load());
+			printf("TOF2 %i\n",last_TOF_2_Sample.load());
+			total_volume += (M_PI*std::pow((float)width,2))/2;
+			printf("Volume %f\n",(M_PI*std::pow((float)width,2))/2);
+
+		}
+	}
 }
+
 
 
