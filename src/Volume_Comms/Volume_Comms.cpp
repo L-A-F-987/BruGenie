@@ -55,6 +55,7 @@ void Volume_Comms::start_sensors(){
 
 	tof_1_callback.variable = &last_TOF_1_Sample;
 	tof_2_callback.variable = &last_TOF_2_Sample;
+	tof_2_callback.mut = mut;
 	TOF_1.registerCallback(&tof_1_callback);
 	TOF_2.registerCallback(&tof_2_callback);
 
