@@ -54,20 +54,19 @@ void Volume_Comms::start_sensors(){
 	motor.start();
 
 	tof_1_callback.variable = &last_TOF_1_Sample;
-	tof_2_callback.variable = &last_TOF_2_Sample;
-	tof_2_callback.mut = mut;
+	tof_2_callback.variable_tof_2 = &last_TOF_2_Sample;
+	tof_2_callback.variable_tof_1 = &last_TOF_1_Sample;
+	tof_2_callback.volume = &total_volume;
 	TOF_1.registerCallback(&tof_1_callback);
 	TOF_2.registerCallback(&tof_2_callback);
 
 	TOF_1.start_recording_data();
 	TOF_2.start_recording_data();
 
-	
-	//thr(std::ref(last_TOF_1_Sample));
+	motor.Set_motor_upwards();
+
+
 	thr = std::thread(&Volume_Comms::Volume_Tracker,this, std::ref(last_TOF_1_Sample), std::ref(last_TOF_2_Sample));
-
-
-	motor.Set_motor_downwards();
 
 }
 
@@ -79,7 +78,7 @@ void Volume_Comms::stop_sensors(){
 	motor.stop();
 	measureing_volume = false;
 
-	thr.join();
+	//thr.join();
 
 	printf("%f\n",total_volume);
 
@@ -95,19 +94,7 @@ void Volume_Comms::stop_sensors(){
 
 void Volume_Comms::Volume_Tracker(std::atomic<int>&last_TOF_1_Sample, std::atomic<int>&last_TOF_2_Sample){
 
-	const struct timespec ts = {1,0};
-	gpiod_line_event_wait(pinDRDY, &ts);
-	struct gpiod_line_event event;
-	gpiod_line_event_read(pinDRDY, &event);
 
-	usleep(10000000);
-
-	int width = total_distance - last_TOF_1_Sample.load() - last_TOF_2_Sample.load();
-
-	//printf("width:%i\nTOF_1:%i\n,TOF_2:%i\n",width);
-	printf("width %i\n",width);
-	printf("TOF1 %i\n",last_TOF_1_Sample.load());
-	total_volume += (M_PI*std::pow((float)width,2))/2;
 
 }
 

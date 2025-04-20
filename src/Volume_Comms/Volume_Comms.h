@@ -53,8 +53,6 @@ class Volume_Comms{
         std::atomic<int> last_TOF_1_Sample;
         std::atomic<int> last_TOF_2_Sample;
 
-        
-
         TOF_1callback tof_1_callback;
         TOF_2callback tof_2_callback;
 
@@ -62,6 +60,7 @@ class Volume_Comms{
 	    struct gpiod_chip *chipDRDY = nullptr;
 
         std::thread thr;
+
 
         bool measureing_volume = true;
 
