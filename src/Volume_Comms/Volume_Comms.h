@@ -7,8 +7,11 @@
 #include "../uld-driver/VL53L4CD_api.h"
 #include "../Control_pins/Pin_Control_Wrapper.h"
 #include "../motor/Parallax_INC4_Servo_Motor.h"
+#include "./thread_controller_class/thread_controller.h"
 
 #include <atomic>
+#include <mutex>
+#include <condition_variable>
 
 #include "TOF_1callback.h"
 #include "TOF_2callback.h"
@@ -23,6 +26,8 @@
 
 class Volume_Comms{
 
+    //making tof_callback 2 and this class friends to share an std::mutex
+    friend class TOF_2callback;
 
     public:
 
@@ -33,11 +38,12 @@ class Volume_Comms{
         void stop_sensors();
 
         float total_volume = 0;
-        
-        
+
     private:
 
-        void Volume_Tracker(std::atomic<int>&last_TOF_1_Sample, std::atomic<int>&last_TOF_2_Sample);
+        void Dispensing_Controller(Thread_Controller& thread_controller);
+
+        void motor_controller();
 
         VL53L4CD_API TOF_1;
         VL53L4CD_API TOF_2;
@@ -46,9 +52,6 @@ class Volume_Comms{
         Pin_Control x_shut_5;
 
         Parallax_Motor motor;
-
-        int total_distance = 125;
-
 
         std::atomic<int> last_TOF_1_Sample;
         std::atomic<int> last_TOF_2_Sample;
@@ -61,8 +64,10 @@ class Volume_Comms{
 
         std::thread thr;
 
-
         bool measureing_volume = true;
+
+        //thread_controller to managed thread communications
+        Thread_Controller thread_controller;
 
 
         

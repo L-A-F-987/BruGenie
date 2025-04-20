@@ -1,0 +1,2 @@
+
+add_library(LIB_thread_controller SHARED thread_controller.cpp)

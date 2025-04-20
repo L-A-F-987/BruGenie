@@ -64,9 +64,10 @@ void Volume_Comms::start_sensors(){
 	TOF_2.start_recording_data();
 
 	motor.Set_motor_upwards();
+	
 
-
-	thr = std::thread(&Volume_Comms::Volume_Tracker,this, std::ref(last_TOF_1_Sample), std::ref(last_TOF_2_Sample));
+	usleep(1000000);
+	thr = std::thread(&Volume_Comms::Dispensing_Controller,this,std::ref(thread_controller));
 
 }
 
@@ -78,7 +79,7 @@ void Volume_Comms::stop_sensors(){
 	motor.stop();
 	measureing_volume = false;
 
-	//thr.join();
+	thr.join();
 
 	printf("%f\n",total_volume);
 
@@ -92,10 +93,30 @@ void Volume_Comms::stop_sensors(){
 
 }
 
-void Volume_Comms::Volume_Tracker(std::atomic<int>&last_TOF_1_Sample, std::atomic<int>&last_TOF_2_Sample){
+void Volume_Comms::Dispensing_Controller(Thread_Controller& thread_controller){
+	//locking thread until measurement it done; 
+	thread_controller.lock_thread();
+	//begin dispensing the liquid
+	int dispensing_volume = 0.9*total_volume;
 
+	motor.stop();
+	TOF_1.stop_recording_data();
+	TOF_2.stop_recording_data();
+	printf("hello\n");
 
-
+	
 }
+
+
+void Volume_Comms::motor_controller(){
+	//block thread until the cup has been measured
+	
+	//begin dispensing the liquid
+	int dispensing_volume = 0.9*total_volume;
+
+	
+}
+
+
 
 
