@@ -22,7 +22,6 @@ int Pin_Control::start(int pin_number){
 
 int Pin_Control::on(){
     // function to switch on GPIO pin for the solenoid valve to start water flow
-    printf("solenoid_on\n");
 
     gpiod_line_set_value(pinGPIO,1); 
 
@@ -32,7 +31,6 @@ int Pin_Control::on(){
 
 int Pin_Control::off(){
     // function to switch off GPIO pin for the solenoid valve to stop water flow
-    printf("solenoid_off\n");
 
     int ret = gpiod_line_set_value(pinGPIO,0);
 

@@ -112,6 +112,22 @@ This circuit connects two VL53L4CD Time-of-Flight (TOF) sensors, a servo motor, 
 <img width="428" alt="image" src="https://github.com/user-attachments/assets/f38a16f3-f1e3-4bfd-9b36-1063663790eb" />
 
 
+## Latency
+
+### TOF Sensor
+
+The VL53L4CD time-of-flight sensors are currently set to operate at a sampling frequency of 5 Hz. This rate is configured through the VL53L4CD_SetRangeTiming_RealTime() function by adjusting the timing_budget_ms and inter_measurement_ms parameters. A value of zero for inter_measurement_ms enables continuous ranging mode, while any non-zero value places the sensor into autonomous low-power mode.
+
+Each distance measurement introduces an average latency of approximately 80–210 µs, which includes the interrupt handling, I2C communication, and the callback execution. At 5 Hz, this latency is well within the 200 ms window between samples. Increasing the sampling frequency could yield faster responsiveness, but doing so would also raise power consumption and increase bus traffic, particularly when multiple sensors are active on the same I2C line.
+
+### Solenoid 
+
+The solenoid valves are switched using GPIO pins and are controlled through a state-based logic system. To prevent both solenoids from opening simultaneously — which could overload the shared power supply — a 1 ms delay (usleep(1000)) was introduced between deactivating one valve and activating the other. This intentional delay ensures hardware safety and provides adequate buffer time for the electrical load to stabilize. The overall switching latency, including GPIO control and the enforced pause, is approximately 1.1–1.3 ms during transitions between solenoids.
+
+### Servo Motor
+
+The servo motor in the system is controlled using Pulse Width Modulation (PWM), where the pulse duration determines the motor’s position. PWM signals are generated using precise timing functions, and position changes are typically triggered by calling motor control functions. The effective latency from issuing a command to the motor reaching its new position is dependent on both signal propagation and mechanical response time, but the software-side delay is minimal — typically under 100–150 µs. However, due to the nature of PWM, smooth and accurate motion requires maintaining a stable frequency (usually 50 Hz), and excessively rapid updates may cause jitter or erratic behavior.
+
 
 ## Publication
 
