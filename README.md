@@ -94,7 +94,7 @@ To execute the software tests run the following command after building, note tha
 make test
 ```
 
-## Classes Within this Gihub 
+## Classes Within this GitHub 
 
 ### /src/VL53L4CD 
 
