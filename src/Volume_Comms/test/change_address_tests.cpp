@@ -1,4 +1,3 @@
-
 #include <unistd.h>
 #include <signal.h>
 #include <dlfcn.h>
@@ -16,11 +15,9 @@ int main(int argc, char ** argv)
     Volume_Comms v;
 
 	v.Boot_sensors();
-	//getchar();
-	v.start_sensors();
-	getchar();
+	usleep(10000);
 	v.stop_sensors();
-
+    v.reset_address();
 
 	return 0;
 }
