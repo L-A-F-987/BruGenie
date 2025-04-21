@@ -223,7 +223,6 @@ void VL53L4CD_API::boot_sensor(uint8_t address, int interrupt_pin)
 				VL53L4CD_DEFAULT_CONFIGURATION[
                                   Addr - (uint16_t)0x2D]);
 	
-	//printf("16bit:%X\n8bit:%X\n",Addr,(uint8_t)Addr);
 	}
 
 	printf("interrupt setting register:%x\n\n",i2c_read_Byte(0x87));
@@ -253,13 +252,14 @@ void VL53L4CD_API::boot_sensor(uint8_t address, int interrupt_pin)
 	//stopping ranging
 	I2C_WrByte(0x87, (uint8_t)0x80);
 
-	//setting ????
+	//writing to registers specified in original driver file to complete sensor init
 	I2C_WrByte(VL53L4CD_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND,(uint8_t)0x09);
 
 	I2C_WrByte(0x0B, (uint8_t)0);
 
 	I2C_WrWord(0x0024, (uint8_t)0x500);
 
+	// function to control sensor ranging 
 	VL53L4CD_SetRangeTiming_RealTime(200,0);
 }
 
@@ -271,30 +271,30 @@ void VL53L4CD_API::start_recording_data(){
 
 	tmp = i2c_read_conversion(VL53L4CD_INTERMEASUREMENT_MS);
 	
-	///* Sensor runs in continuous mode */
+	// Sensor runs in continuous mode
 	if(tmp == (uint8_t)0){
 
 		I2C_WrByte(0x87, (uint8_t)0x21);
 	
 	}
-	/* Sensor runs in autonomous mode */
+	// Sensor runs in autonomous mode
 	else{
 		I2C_WrByte(0x87, (uint8_t)0x40);
 	}
 
 
 	I2C_WrByte(0x86, 0x01);
-	thr = std::thread(&VL53L4CD_API::worker,this);
+	thr = std::thread(&VL53L4CD_API::worker,this); //launching sensor-specific thread (one per VL53L4CD unit used in the system)
 
 }
 
 void VL53L4CD_API::DataReady(){
 	uint16_t v = i2c_read_conversion(VL53L4CD_RESULT__DISTANCE);
-	//for(auto &cb: adsCallbackInterface){
-	//	cb -> hasVL53L4CDSample(v);
-	//}
+	
+	for(auto &cb: VL53L4CDcallbackinterface){
+		cb -> hasVL53L4CDSample(v); //callback to value that is read in
+	}
 
-	printf("%u\n",v);
 }
 
 
@@ -304,7 +304,7 @@ void VL53L4CD_API::stop_recording_data(){
 	thr.join();
 	gpiod_line_release(pinDRDY);
 	gpiod_chip_close(chipDRDY);
-	close(fd_i2c);
+	close(fd_i2c); //closing i2c line
 }
 
 
@@ -328,14 +328,14 @@ void VL53L4CD_API::worker()
 
 void VL53L4CD_API::stop_sensor_ranging(){
 
-	I2C_WrByte(0x87, (uint8_t)0x80);
+	I2C_WrByte(0x87, (uint8_t)0x80); //writing 0x80 to 0x87 stop sensor activity
 
 }
 
-uint8_t VL53L4CD_API::I2C_WrWord(uint16_t reg, uint16_t value)
+uint8_t VL53L4CD_API::I2C_WrWord(uint16_t reg, uint16_t value) //function to write 2 bytes to a register
 {	
 
-	//uint8_t original_value = i2c_read_conversion(reg);
+	//bit shifting and masking to split register into most and least significant values so it can be written to
 	
 	uint8_t data_write[4];
 	data_write[0] = (reg >> 8) & 0xFF;
@@ -344,24 +344,21 @@ uint8_t VL53L4CD_API::I2C_WrWord(uint16_t reg, uint16_t value)
 	data_write[3] = value & 0xFF;
 	long int r = write(fd_i2c,&data_write,4);
 	if(r < 0){
-		printf("%i",r);
+		printf("%ld",r);
 	#ifdef DEBUG
                 fprintf(stderr,"Could not read word from %02x. ret=%d.\n",address,r);
 	#endif
              throw "Could not read from i2c.";
 	}
 
-
-	uint16_t written_value = i2c_read_conversion(reg);
+	return 0;
 
 }
 
-uint8_t VL53L4CD_API::I2C_Wr_four_bytes(uint16_t reg, uint32_t value)
-{	
-
-	uint8_t original_value = i2c_read_conversion(reg);
+uint8_t VL53L4CD_API::I2C_Wr_four_bytes(uint16_t reg, uint32_t value) //function to write 4 bytes to a register
+{
 	
-	uint8_t data_write[6];
+	uint8_t data_write[6]; //bit shifting and masking
 	data_write[0] = (reg >> 8) & 0xFF;
 	data_write[1] = reg & 0xFF;
 	data_write[2] = (value >> 24) & 0xFF;
@@ -369,50 +366,45 @@ uint8_t VL53L4CD_API::I2C_Wr_four_bytes(uint16_t reg, uint32_t value)
 	data_write[4] = (value >> 8) & 0xFF;
 	data_write[5] = value & 0xFF;
 	long int r = write(fd_i2c,&data_write,6);
-
-	//printf("you are writing a 32 bit number of; %x\n\n",value);
 	if(r < 0){
-		printf("%i",r);
+		printf("%ld",r);
 	#ifdef DEBUG
                 fprintf(stderr,"Could not read word from %02x. ret=%d.\n",address,r);
 	#endif
              throw "Could not read from i2c.";
 	}
 
-	uint16_t written_value = i2c_read_conversion(reg);
+	return 0;
+
 
 }
 
-uint8_t VL53L4CD_API::I2C_WrByte(uint16_t reg, uint8_t value)
+uint8_t VL53L4CD_API::I2C_WrByte(uint16_t reg, uint8_t value) //writing a single byte to a register
 {	
-
-
-	//uint8_t original_value = i2c_read_Byte(reg);
 	
-	uint8_t data_write[3];
+	uint8_t data_write[3]; //bit shifting and masking
 	data_write[0] = (reg >> 8) & 0xFF;
 	data_write[1] = reg & 0xFF;
 	data_write[2] = value;
 	long int r = write(fd_i2c,&data_write,3);
 	if(r < 0){
-		printf("%i",r);
+		printf("%ld",r);
 	#ifdef DEBUG
                 fprintf(stderr,"Could not read word from %02x. ret=%d.\n",address,r);
 	#endif
              throw "Could not read from i2c.";
 	}
 
-
-	//uint8_t written_value = i2c_read_Byte(reg);
+	return 0;
 
 
 }
 
 
 
-int VL53L4CD_API::i2c_read_conversion(uint8_t reg){
+int VL53L4CD_API::i2c_read_conversion(uint8_t reg){ //reading a datay array from a register
 
-	uint8_t data_array[2];
+	uint8_t data_array[2]; //bit shifting and masking
 	data_array[0] = (reg>>8) & 0xFF;
 	data_array[1] = reg & 0xFF;
 	write(fd_i2c,data_array,2);
@@ -433,9 +425,9 @@ int VL53L4CD_API::i2c_read_conversion(uint8_t reg){
 
 };
 
-int VL53L4CD_API::i2c_read_Byte(uint16_t reg){
+int VL53L4CD_API::i2c_read_Byte(uint16_t reg){ //reading a single byte from a register
 
-	uint8_t data_array[2];
+	uint8_t data_array[2]; //bit shifting and masking
 	data_array[0] = (reg>>8) & 0xFF;
 	data_array[1] = reg & 0xFF;
 	write(fd_i2c,data_array,2);
@@ -458,7 +450,8 @@ int VL53L4CD_API::i2c_read_Byte(uint16_t reg){
 
 };
 
-void VL53L4CD_API::VL53L4CD_SetRangeTiming_RealTime(
+//function to set sensor ranging time
+void VL53L4CD_API::VL53L4CD_SetRangeTiming_RealTime(  
 		uint32_t timing_budget_ms,
 		uint32_t inter_measurement_ms)
 {
@@ -483,7 +476,8 @@ void VL53L4CD_API::VL53L4CD_SetRangeTiming_RealTime(
 	{
 		printf("\nTiming Budget Fail\n");
 	}
-	//Sensor runs in continuous mode
+	//Sensor runs in continuous mode, continuous reading in of sensor data controlled by interrupt 
+	//(used in this project, but mode may be switched by the user depending on the use case)
 	else if(inter_measurement_ms == (uint32_t)0)
 	{
 		I2C_WrWord(VL53L4CD_INTERMEASUREMENT_MS, 0);
@@ -508,6 +502,7 @@ void VL53L4CD_API::VL53L4CD_SetRangeTiming_RealTime(
 
 	}
 
+		//bit shifting and masking to write to range timing configuration registers
 		ms_byte = 0;
 		timing_budget_us = timing_budget_us << 12;
 		tmp = macro_period_us*(uint32_t)16;
@@ -537,7 +532,7 @@ void VL53L4CD_API::VL53L4CD_SetRangeTiming_RealTime(
 
 }
 
-void VL53L4CD_API::VL53L4CD_SetI2CAddress(
+void VL53L4CD_API::VL53L4CD_SetI2CAddress( //function to change i2c address, used to integrate 2 sensors on the same i2c bus (used in this project)
 		uint8_t new_address)
 {
 
@@ -548,6 +543,11 @@ void VL53L4CD_API::VL53L4CD_SetI2CAddress(
 	address =  new_address;
 
 
+}
+
+//callback function
+void hasVL53L4CDSample(uint16_t sample){
+	printf("%i\n",sample);
 }
 
 

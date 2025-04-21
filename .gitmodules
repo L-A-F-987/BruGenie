@@ -1,3 +1,6 @@
-[submodule "cppTimer"]
-	path = cppTimer
+[submodule "src/motor/rpi_pwm"]
+	path = src/motor/rpi_pwm
+	url = https://github.com/berndporr/rpi_pwm.git
+[submodule "src/DS18B20_TempSensor/cppTimer"]
+	path = src/DS18B20_TempSensor/cppTimer
 	url = https://github.com/berndporr/cppTimer.git

@@ -20,6 +20,7 @@ void Solenoid_Controller::stop(){
     solenoid_2.stop();
 };
 
+//defining functions with a switch case to switch on/off based on the value of solenoid state boolean
 void Solenoid_Controller::Open_solenoid_1(){
 
     switch(solenoid_2_state){
@@ -66,6 +67,8 @@ void Solenoid_Controller::Open_solenoid_2(){
         }
 
 };
+
+//functions to close solenoid to stop fluid flow
 
 void Solenoid_Controller::Close_solenoid_1(){
 

@@ -18,19 +18,19 @@ add_library(LIB_uld_driver
 )
 
 #example files 
-add_library(LIB_test_cpps
-  SHARED
-  ./examples/Example_1_ranging_basic.cpp
-  ./examples/Example_2_low_power.cpp
-  )
+#add_library(LIB_test_cpps
+#  SHARED
+#  ./examples/Example_1_ranging_basic.cpp
+#  ./examples/Example_2_low_power.cpp
+#  )
 
 target_include_directories(LIB_uld_driver PUBLIC uld-driver/)
-target_include_directories(LIB_test_cpps PUBLIC examples/)
+#target_include_directories(LIB_test_cpps PUBLIC examples/)
 
 
 target_link_libraries(LIB_uld_driver gpiod)
 
-target_link_libraries(LIB_test_cpps LIB_uld_driver)
+#target_link_libraries(LIB_test_cpps LIB_uld_driver)
 
 add_subdirectory(./test)
 
