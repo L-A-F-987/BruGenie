@@ -9,7 +9,7 @@
 class TOF_1callback : public VL53L4CD_API::VL53L4CD_Callback_Interface {
    
     virtual void hasVL53L4CDSample(uint16_t v) override {
-    //printf("%i\n",v);
+    printf("%i\n",v);
 
     if (variable) {
         variable -> store(v);

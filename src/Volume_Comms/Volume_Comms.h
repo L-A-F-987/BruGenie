@@ -8,6 +8,7 @@
 #include "../Control_pins/Pin_Control_Wrapper.h"
 #include "../motor/Parallax_INC4_Servo_Motor.h"
 #include "./thread_controller_class/thread_controller.h"
+#include "../Solenoid_Controller/Solenoid_Controller.h"
 
 #include <atomic>
 #include <mutex>
@@ -37,11 +38,13 @@ class Volume_Comms{
 
         void stop_sensors();
 
+        void reset_address();
+
         float total_volume = 0;
 
     private:
 
-        void Dispensing_Controller(Thread_Controller& thread_controller);
+        void Dispensing_Controller();
 
         void motor_controller();
 
@@ -53,21 +56,24 @@ class Volume_Comms{
 
         Parallax_Motor motor;
 
+        Solenoid_Controller solenoids;
+
         std::atomic<int> last_TOF_1_Sample;
         std::atomic<int> last_TOF_2_Sample;
 
         TOF_1callback tof_1_callback;
         TOF_2callback tof_2_callback;
-
-        struct gpiod_line *pinDRDY = nullptr;
-	    struct gpiod_chip *chipDRDY = nullptr;
-
         std::thread thr;
 
         bool measureing_volume = true;
 
         //thread_controller to managed thread communications
         Thread_Controller thread_controller;
+
+        int flowrate = 30;
+
+        float coffee_ratio = 0.9;
+        float milk_ratio = 1.0 - coffee_ratio;
 
 
         

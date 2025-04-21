@@ -9,9 +9,7 @@ add_library(LIB_Volume_Comms
 
 add_subdirectory(./thread_controller_class)
 
-
-
-target_link_libraries(LIB_Volume_Comms LIB_Pin_Control LIB_uld_driver LIB_Motor_Control LIB_thread_controller)
+target_link_libraries(LIB_Volume_Comms LIB_Pin_Control LIB_uld_driver LIB_Motor_Control LIB_thread_controller LIB_Solenoid_Controller)
 
 
 add_subdirectory(test)
