@@ -56,6 +56,7 @@ git submodule update --recursive
 
 ```
 apt-get install cmake
+sudo apt install libgpiod-dev
 ```
 
 ## Building 
