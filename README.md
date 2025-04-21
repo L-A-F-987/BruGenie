@@ -4,6 +4,17 @@
 
 This GitHub repository showcases a real-time embedded systems project focused on developing a smart coffee machine. The machine measures mug volume to ensure each cup is filled to the perfect level, maintaining a consistent milk-to-coffee ratio regardless of cup size.
 
+<img src="https://github.com/user-attachments/assets/8f8290e2-a44a-4a57-bbb8-144e09ec18e9" width="320">
+
+<img src="https://github.com/user-attachments/assets/66c979bc-5e96-45b1-8562-b45a0b5766f4" width="320">
+
+<img src="https://github.com/user-attachments/assets/7c05620b-be04-4458-b716-e5892ed022bd" width="320">
+
+<img src="https://github.com/user-attachments/assets/96a89001-aa37-4dee-81bb-6b1ea816a354" width="320">
+
+<img src="https://github.com/user-attachments/assets/103f9ef5-c6cb-4238-85c1-f80a52890cb7" width="380">
+
+
 ## Table of Contents
 
 - [Bill of Materials](#bill-of-materials)
@@ -56,6 +67,7 @@ git submodule update --recursive
 
 ```
 apt-get install cmake
+sudo apt install libgpiod-dev
 ```
 
 ## Building 
