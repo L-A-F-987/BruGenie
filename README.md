@@ -181,7 +181,7 @@ Key Insight: Instagram was the most successful platform in terms of engagement a
   
 ## Acknowledgements
 
-We would like to thank Bernd Porr for providing us with the opportunity to work on this project and for supervising us throughout. We also extend our gratitude to RS Components for funding the project, their support played a key role in bringing our idea to life. Finally, a haertfelt thank you to the mechanical workshop, as well as the electronics and printing lab technicians, for their help in streamlining the build and completion of the system.
+We would like to thank Dr. Bernd Porr for providing us with the opportunity to work on this project and for supervising us throughout. We also extend our gratitude to RS Components for funding the project, their support played a key role in bringing our idea to life. Finally, a heartfelt thank you to the mechanical workshop, as well as the electronics and printing lab technicians, for their help in streamlining the build and completion of the system.
 
 ## Authors and Contributions
 
