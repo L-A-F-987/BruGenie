@@ -92,7 +92,7 @@ This circuit connects two VL53L4CD Time-of-Flight (TOF) sensors, a servo motor, 
 
 ## Publication
 
-RS Design Spark article published on 20/03/2025 regarding project purpose and function 
+An article about the project's purpose and functionality was published on **RS DesignSpark** on **20/03/2025**, highlighting its innovative approach to real-time liquid dispensing and sensor integration. The feature showcased the system's design, components, and potential applications in smart automation.
 - [Article](https://www.rs-online.com/designspark/brugenie-coffee-anyway-you-wish)
 
 
@@ -100,8 +100,23 @@ RS Design Spark article published on 20/03/2025 regarding project purpose and fu
 
 - [Instagram](https://www.instagram.com/brugenie/?locale=en_GB&hl=en)
 - [Tiktok](https://www.tiktok.com/@brugenie)
-- [Youtube](https://www.youtube.com/channel/UCvZ_YEZ7hOzSlOggeiQ_5xw) 
+- [Youtube](https://www.youtube.com/channel/UCvZ_YEZ7hOzSlOggeiQ_5xw)
 
+
+### Platform Performance Summary:
+
+- Instagram: 8.5K views, resulting in 85+ followers
+
+- YouTube: 2K views, gaining 8+ followers
+
+- TikTok: 300+ views, with 4 followers
+
+- GitHub: 1,000 views and 53 repository clones
+
+Total Views: Over 10,000 across platforms, garnering 100+ followers throughout the journey.
+
+Key Insight: Instagram was the most successful platform in terms of engagement and reach, and therefore received the most strategic focus.
+  
 ## Acknowledgements
 
 We would like to thank Bernd Porr for providing us with the opportunity to work on this project and for supervising us throughout. We also extend our gratitude to RS Components for funding the project, their support played a key role in bringing our idea to life. Finally, a haertfelt thank you to the mechanical workshop, as well as the electronics and printing lab technicians, for their help in streamlining the build and completion of the system.
@@ -113,6 +128,22 @@ We would like to thank Bernd Porr for providing us with the opportunity to work 
 - **Tanvi Kapil** - Completed the ADS1115 (weight sensor) class, Solenoid Controller, and the VL53L4CD (time-of-flight) driver by translating it from C to C++. Also worked on volume control and motor control.
 - **Taniya Jose** - Completed CAD drawings and models, 3D printing, Raspberry Pi setup, and wrote the RS DesignSpark article for the student fund. 
 - **Maarven Pathmanabhan** - Completed all circuit design and wiring, and worked on the DS18B20 temperature sensor.
+
+## License
+### cppTimer
+- The Timer Wrapper C++ was adopted from [Bernd Porr](https://github.com/berndporr), which can be sourced [here](https://github.com/berndporr/cppTimer).
+
+### PWM
+- The PWM C++ class was adopted from [Bernd Porr](https://github.com/berndporr), which can be sourced [here](https://github.com/berndporr/rpi_pwm#).
+
+### ADS1115 
+- The ADS1115 library was adopted from [Bernd Porr](https://github.com/berndporr), which can be sourced [here](https://github.com/berndporr/rpi_ads1115).
+
+### VL53L4CD Time Of Flight
+- The TOF sensor code was adopted from the driver provided by [ST Microelctronics](https://github.com/stmicroelectronics), which can be sourced [here](https://www.st.com/en/imaging-and-photonics-solutions/vl53l4cd.html#documentation).
+
+
+
 
 ## Contact Us
 
