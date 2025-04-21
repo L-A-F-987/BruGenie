@@ -16,14 +16,11 @@ This GitHub repository showcases a real-time embedded systems project focused on
 ### Microcontroller
 
 - Raspberry PI 5
-- 
+  
 ### Sensors
 
 - 2 × VL53L4CD – Time-of-Flight Sensors
 - 1 × DS18B20 – Temperature Sensor
-=======
-- 1 × AC/DC Power Supply
-- 2 x Solenoid Valve ST-SA series Normally Closed
 - 1 × Parallax Inc Servo Motor – 4–6V, 50 RPM, 27 N·cm Max Output Torque
 
 ### Additional Components
@@ -31,12 +28,9 @@ This GitHub repository showcases a real-time embedded systems project focused on
 - 1 x AC/DC Power Supply
 - 1 × 10mm Lead Screw
 - 1 × Igus Flanged Round Nut – 10mm
-- 1 × Liquid Retainer
-=======
+- 1 × Liquid Reservoir
 - 1 × Microswitch
-- 1 × 10mm Lead Screw
-- 1 × Igus Flanged Round Nut – 10mm
-- 1 x Liquid Reservoir 
+
 
 ### Libraries
 
@@ -57,6 +51,8 @@ This will create executables stored in the following folders for testing of each
 - /src/DS18B20_TempSensor (Temperature Sensor)
 - /src/Solenoid_Controller (Solenoid Control)
 - /src/motor (Servo Motor Control)
+- /src/Volume_Comms (Volume Measurement)
+- /src/Control_pins (Pin control)
 
 ### Running Software Tests
 
@@ -65,6 +61,23 @@ To execute the software tests run the following command after building.
 ```
 make test
 ```
+
+
+
+## Circuit Diagram
+
+This circuit connects two VL53L4CD Time-of-Flight (TOF) sensors, a servo motor, and two solenoids to a Raspberry Pi. The TOF sensors share I2C lines (SDA/SCL) but use separate XSHUT GPIOs to assign unique addresses. The servo is controlled via PWM (GPIO 12), and each solenoid is activated by a GPIO pin through a transistor switch, powered by a 12V source with flyback diodes for protection. The Raspberry Pi acts as the central controller for sensing and actuation.
+
+<img width="428" alt="image" src="https://github.com/user-attachments/assets/f38a16f3-f1e3-4bfd-9b36-1063663790eb" />
+
+
+
+## Publication
+
+RS Design Spark article published on 20/03/2025 regarding project purpose and function 
+- [Article](https://www.rs-online.com/designspark/brugenie-coffee-anyway-you-wish)
+
+
 ## Social Media Channels
 
 - [Instagram](https://www.instagram.com/brugenie/?locale=en_GB&hl=en)
@@ -75,7 +88,7 @@ make test
 
 Thank you to Bernd Porr for providing us with the opportunity to work on this project and for supervising us throughout. We’d also like to extend our gratitude to RS Components for funding our project — their contribution helped bring our idea to life.
 
-## Authors
+## Authors 
 
 - Luca Faccenda
 - Manaf Habeeb 
@@ -88,4 +101,4 @@ Thank you to Bernd Porr for providing us with the opportunity to work on this pr
 Company Email: c0ffee.embedded@gmail.com
 
 ## Last Updated
-This README was last updated on 16/04/2025.
+This README was last updated on 21/04/2025.
