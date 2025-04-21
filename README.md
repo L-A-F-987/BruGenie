@@ -88,11 +88,34 @@ This will create executables stored in the following folders for testing of each
 
 ### Running Software Tests
 
-To execute the software tests run the following command after building.
+To execute the software tests run the following command after building, note that these tests only run basic tests for the sensors, this is because each of the other wrappers involve writing directly to set GPIO pin states. Test executables for each of these can therefore be found in each subdirectory for their respective class.
 
 ```
 make test
 ```
+
+## Classes Within this Gihub 
+
+### /src/VL53L4CD 
+
+This github contains a c++ interrupt based driver for the VL53L4CD TOF sensor. This class can be used to read values from the VL53L4CD sensor/s and allows for a threaded callback which can be overwritten for the desired application.
+
+### /src/motor
+
+This github contains a wrapper for a the parallax motor mentioned in the bill of materials, this wrapper uses a pre existing PWM class with the correct frequency and cycle to allow for the motor to be controlled.
+
+### /src/Control_Pins
+
+This github contains a wrapper for the gpiod class to allow for simple writing to gpio pins on the Raspberry Pi 5.
+
+### /src/Solenoid_Controller
+
+This github contains a wrapper for the control pins class that manages the two solennoids through the use of the transistors shown. 
+
+### /src/DS18b20
+
+This github contains a class for regularly sampling the DS18b20 temperature sensor on a one wire protocol using an existing cpp_timer class. This can be adapted easily to be used for the desired sampling interval.
+
 
 ## User Case UML Diagram
 
@@ -181,6 +204,9 @@ We would like to thank Bernd Porr for providing us with the opportunity to work 
 ### VL53L4CD Time Of Flight
 - The TOF sensor code was adopted from the driver provided by [ST Microelctronics](https://github.com/stmicroelectronics), which can be sourced [here](https://www.st.com/en/imaging-and-photonics-solutions/vl53l4cd.html#documentation).
 
+## Future Work
+
+The future work for this project would be to integrate the threading of both the dispensing and tofs to remove the need for user input when volume measurement is done. Addtionally a microswitch could be implemented to detect the presence of a mug. Additionally, the coffee could be heat and grided as part of the mehcanism. 
 
 
 
