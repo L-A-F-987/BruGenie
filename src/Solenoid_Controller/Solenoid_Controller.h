@@ -12,18 +12,19 @@ class Solenoid_Controller{
 
 
     public:
+    // declaring functions to open and close the solenoid valves in response to writing the respective pins to be high or low
 
-    void start();
+        void start();
 
-    void Open_solenoid_1();
+        void Open_solenoid_1();
 
-    void Open_solenoid_2();
+        void Open_solenoid_2();
 
-    void Close_solenoid_1();
+        void Close_solenoid_1();
 
-    void Close_solenoid_2();
+        void Close_solenoid_2();
 
-    void stop();
+        void stop();
 
     
 
@@ -31,14 +32,15 @@ class Solenoid_Controller{
     private:
 
 
-    //solenoid used for milk
-    Pin_Control solenoid_1;
+        //solenoid used for milk
+        Pin_Control solenoid_1;
 
-    //solenoid used for water
-    Pin_Control solenoid_2;
+        //solenoid used for water
+        Pin_Control solenoid_2;
 
-    bool solenoid_1_state;
-    bool solenoid_2_state;
+        // declaring booleans to use for switch case to switch between code blocks in the cpp file
+        bool solenoid_1_state;
+        bool solenoid_2_state;
 
 };
 

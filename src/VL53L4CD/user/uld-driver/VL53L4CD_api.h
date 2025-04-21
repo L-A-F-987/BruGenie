@@ -115,76 +115,76 @@ typedef struct {
 class VL53L4CD_API{
 
 	
-public:
+	public:
 
-	//function to boot the sensor
-	void boot_sensor(uint8_t address, int interrupt_pin);
+		//function to boot the sensor
+		void boot_sensor(uint8_t address, int interrupt_pin);
 
-	//function to set the sensor to stop recording data internally 
-	void stop_sensor_ranging();
+		//function to set the sensor to stop recording data internally 
+		void stop_sensor_ranging();
 
-	//function to begin recording data
-	void start_recording_data();
+		//function to begin recording data
+		void start_recording_data();
 
-	//function to stop recording data through the I2C
-	void stop_recording_data();
+		//function to stop recording data through the I2C
+		void stop_recording_data();
 
-	//virtual void function for use in callback
-	struct VL53L4CD_Callback_Interface {
-		virtual void hasVL53L4CDSample(uint16_t sample) = 0;
-	};
+		//virtual void function for use in callback
+		struct VL53L4CD_Callback_Interface {
+			virtual void hasVL53L4CDSample(uint16_t sample) = 0;
+		};
 
-	void registerCallback(VL53L4CD_Callback_Interface* ci) {
-		VL53L4CDcallbackinterface.push_back(ci);
-	};
+		void registerCallback(VL53L4CD_Callback_Interface* ci) {
+			VL53L4CDcallbackinterface.push_back(ci);
+		};
 
-	//function to change I2C_Address
-	void VL53L4CD_SetI2CAddress(uint8_t new_address);
-
-
-private: 
-
-	bool running = false; 
-
-	//defining a default pin for interrupt 
-	struct gpiod_line *pinDRDY = nullptr;
-	struct gpiod_chip *chipDRDY = nullptr;
-
-	std::thread thr;
-
-	int i2c_read_conversion(uint8_t reg);
-
-	std::vector<VL53L4CD_Callback_Interface*> VL53L4CDcallbackinterface;
-
-	int interrupt_pin;
-	int chip;
-	int fd_i2c = -1;
+		//function to change I2C_Address
+		void VL53L4CD_SetI2CAddress(uint8_t new_address);
 
 
-	//defining the address of the sensor 
-	uint8_t address = DEFAULT_VL53L4CD_ADDRESS;
+	private: 
+
+		bool running = false; 
+
+		//defining a default pin for interrupt 
+		struct gpiod_line *pinDRDY = nullptr;
+		struct gpiod_chip *chipDRDY = nullptr;
+
+		std::thread thr;
+
+		int i2c_read_conversion(uint8_t reg);
+
+		std::vector<VL53L4CD_Callback_Interface*> VL53L4CDcallbackinterface;
+
+		int interrupt_pin;
+		int chip;
+		int fd_i2c = -1;
 
 
-	//function to write a 2 byte long word to a register 
-	uint8_t I2C_WrWord(uint16_t reg,uint16_t value);
+		//defining the address of the sensor 
+		uint8_t address = DEFAULT_VL53L4CD_ADDRESS;
 
-	//function to write a single byte to a register
-	uint8_t I2C_WrByte(uint16_t reg, uint8_t value);
 
-	//function to write a 32 bit number to a 16 bit register
-	uint8_t I2C_Wr_four_bytes(uint16_t reg, uint32_t value);
+		//function to write a 2 byte long word to a register 
+		uint8_t I2C_WrWord(uint16_t reg,uint16_t value);
 
-	int i2c_read_Byte(uint16_t reg);
+		//function to write a single byte to a register
+		uint8_t I2C_WrByte(uint16_t reg, uint8_t value);
 
-	//function to read data when data ready pin is high
-	void DataReady();
+		//function to write a 32 bit number to a 16 bit register
+		uint8_t I2C_Wr_four_bytes(uint16_t reg, uint32_t value);
 
-	//function using blocking IO to wait for the interrupt pin before reading data in real-time
-	void worker();
+		int i2c_read_Byte(uint16_t reg);
 
-	//function to set range timing 
-	void VL53L4CD_SetRangeTiming_RealTime(uint32_t timing_budget_ms,
-		uint32_t inter_measurement_ms);
+		//function to read data when data ready pin is high
+		void DataReady();
+
+		//function using blocking IO to wait for the interrupt pin before reading data in real-time
+		void worker();
+
+		//function to set range timing 
+		void VL53L4CD_SetRangeTiming_RealTime(uint32_t timing_budget_ms,
+			uint32_t inter_measurement_ms);
 
 
 

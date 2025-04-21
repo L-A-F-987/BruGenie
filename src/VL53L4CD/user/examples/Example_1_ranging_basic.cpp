@@ -15,7 +15,7 @@ int example1()
 	VL53L4CD.start_recording_data();
 	getchar();
 	getchar();
-	usleep(1000);
+	usleep(1000); //short sleep to ensure that sensor readings have come in before values are accessed
 	VL53L4CD.stop_recording_data();
 
 	printf("End of ULD demo\n");

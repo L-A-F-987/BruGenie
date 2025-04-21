@@ -7,27 +7,27 @@
 class Parallax_Motor {
 
     public:
+        // declaring functions to move motor up, down, and stopping it
+        int start();
 
-    int start();
+        int stop();
 
-    int stop();
+        int Set_motor_upwards();
 
-    int Set_motor_upwards();
+        int Set_motor_stop();
 
-    int Set_motor_stop();
-
-    int Set_motor_downwards();
+        int Set_motor_downwards();
 
     private:
 
-    //frequency for the PWM for each motor to get a gap of 20ms between pulses
-    int f = 47;
+        //frequency for the PWM for each motor to get a gap of 20ms between pulses
+        int f = 47;
 
-    //channel for the PWM
-    int channel = 2;
+        //channel for the PWM
+        int channel = 2;
 
-    //PWM
-    RPI_PWM pwm;
+        //PWM
+        RPI_PWM pwm;
 
 };
 

@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 int Parallax_Motor::start(){
-    pwm.start(channel, f);
+    pwm.start(channel, f); //starting the pwm and supplying frequency and GPIO channel
 }
 
 
@@ -29,27 +29,3 @@ int Parallax_Motor::Set_motor_downwards(){
 int Parallax_Motor::stop(){
     pwm.stop();
 };
-
-
-/*
-int main(int argc, char *argv[]) {
-    int channel = 2;
-    int frequency = 40; // Hz
-    if (argc > 1) {
-	channel = atoi(argv[1]);
-    }
-    printf("Enabling PWM on channel %d.\n",channel);
-    RPI_PWM pwm;
-    pwm.start(channel, frequency);
-    printf("Duty cycle at 65%%\n");
-    pwm.setDutyCycle(5.2);
-    getchar();
-    printf("Duty cycle at 75%%\n");
-    pwm.setDutyCycle(6);
-    getchar();
-    printf("Duty cycle at 85%%\n");
-    pwm.setDutyCycle(6.8);
-    getchar();
-    pwm.stop();
-}
-*/
