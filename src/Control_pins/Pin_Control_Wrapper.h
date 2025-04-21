@@ -1,8 +1,8 @@
 
 
 
-#ifndef Solenoid_Control_H_
-#define Solenoid_Control_H_
+#ifndef Pin_Control_H_
+#define Pin_Control_H_
 
 #define chip_used 4
 
