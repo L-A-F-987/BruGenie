@@ -11,7 +11,7 @@ int example1()
 
 	VL53L4CD_API VL53L4CD;
 
-	VL53L4CD.boot_sensor();
+	VL53L4CD.boot_sensor(0x29,14);
 	VL53L4CD.start_recording_data();
 	getchar();
 	getchar();
