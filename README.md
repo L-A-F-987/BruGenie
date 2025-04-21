@@ -119,7 +119,7 @@ This github contains a class for regularly sampling the DS18b20 temperature sens
 
 ## User Case UML Diagram
 
-This sequence diagram shows the steps taken by the coffee machine system after a user places a mug on the platform.
+This section outlines the planned UML diagram for this project. This sequence diagram shows the steps taken by the coffee machine system after a user places a mug on the platform.
 
 The process begins when the user places a mug, triggering the microswitch. The microswitch activates the servo motor, which starts the volume computation process. The volume computation component communicates with the time-of-flight sensor to boot it, start recording data, and stop recording once the volume is measured.
 
