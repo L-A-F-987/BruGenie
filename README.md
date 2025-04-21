@@ -41,6 +41,17 @@ This GitHub repository showcases a real-time embedded systems project focused on
 
 **Grand Total:** £289.94
 
+### Cloning
+To clone with all submodules, run:
+```
+git clone --recursive
+```
+If the submodules do not download, run:
+
+```
+git submodule update --recursive
+```
+
 ### Libraries
 
 ```
