@@ -10,12 +10,9 @@ int example1()
 {
 
 	VL53L4CD_API VL53L4CD;
-
 	VL53L4CD.boot_sensor(0x29,14);
 	VL53L4CD.start_recording_data();
-	getchar();
-	getchar();
-	usleep(1000); //short sleep to ensure that sensor readings have come in before values are accessed
+	usleep(1000); 
 	VL53L4CD.stop_recording_data();
 
 	printf("End of ULD demo\n");

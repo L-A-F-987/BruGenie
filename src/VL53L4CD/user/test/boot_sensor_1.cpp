@@ -11,36 +11,25 @@
   */
 
 
-/***********************************/
-/*     VL53L4CD ULD low power      */
-/***********************************/
-/*
-* This example shows an example of low power usage. It initializes the VL53L4CD
-* ULD, configure the sensor and starts a ranging to capture 200 frames.
-*
-*/
+#include <unistd.h>
+#include <signal.h>
+#include <dlfcn.h>
 
-#include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
+
 #include "../uld-driver/VL53L4CD_api.h"
 
-int example2()
+int main(int argc, char ** argv)
 {
-
 	VL53L4CD_API VL53L4CD;
 
 	VL53L4CD.boot_sensor(0x29,14);
-	VL53L4CD.VL53L4CD_SetI2CAddress((uint8_t)0x28);
-	
-
-	//getchar();
-	//VL53L4CD.stop_sensor_ranging();
+	VL53L4CD.start_recording_data();
+	usleep(100000); 
 	VL53L4CD.stop_recording_data();
 
+	printf("End of boot test\n");
 
-	//status = VL53L4CD.VL53L4CD_StopRanging(dev);
-	printf("End of ULD demo\n");
-	//return status;
-
+	return 0;
 }
