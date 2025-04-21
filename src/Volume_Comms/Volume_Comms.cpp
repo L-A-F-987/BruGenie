@@ -38,6 +38,8 @@ int Volume_Comms::Boot_sensors()
 
 	TOF_1.boot_sensor(TOF_1_address, TOF_1_interrupt);
 	TOF_2.boot_sensor(TOF_2_address, TOF_2_interrupt);
+
+	return 0;
 };
 
 

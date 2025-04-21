@@ -20,7 +20,7 @@
 
 #include "../uld-driver/VL53L4CD_api.h"
 
-int main(int argc, char ** argv)
+int main()
 {
 	VL53L4CD_API VL53L4CD;
 
