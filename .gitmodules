@@ -1,6 +1,3 @@
-[submodule "cppTimer"]
-	path = cppTimer
-	url = https://github.com/berndporr/cppTimer.git
 [submodule "src/motor/rpi_pwm"]
 	path = src/motor/rpi_pwm
 	url = https://github.com/berndporr/rpi_pwm.git
