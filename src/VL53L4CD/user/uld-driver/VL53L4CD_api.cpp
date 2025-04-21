@@ -344,22 +344,19 @@ uint8_t VL53L4CD_API::I2C_WrWord(uint16_t reg, uint16_t value) //function to wri
 	data_write[3] = value & 0xFF;
 	long int r = write(fd_i2c,&data_write,4);
 	if(r < 0){
-		printf("%i",r);
+		printf("%ld",r);
 	#ifdef DEBUG
                 fprintf(stderr,"Could not read word from %02x. ret=%d.\n",address,r);
 	#endif
              throw "Could not read from i2c.";
 	}
 
-
-	uint16_t written_value = i2c_read_conversion(reg);
+	return 0;
 
 }
 
 uint8_t VL53L4CD_API::I2C_Wr_four_bytes(uint16_t reg, uint32_t value) //function to write 4 bytes to a register
-{	
-
-	uint8_t original_value = i2c_read_conversion(reg);
+{
 	
 	uint8_t data_write[6]; //bit shifting and masking
 	data_write[0] = (reg >> 8) & 0xFF;
@@ -370,14 +367,15 @@ uint8_t VL53L4CD_API::I2C_Wr_four_bytes(uint16_t reg, uint32_t value) //function
 	data_write[5] = value & 0xFF;
 	long int r = write(fd_i2c,&data_write,6);
 	if(r < 0){
-		printf("%i",r);
+		printf("%ld",r);
 	#ifdef DEBUG
                 fprintf(stderr,"Could not read word from %02x. ret=%d.\n",address,r);
 	#endif
              throw "Could not read from i2c.";
 	}
 
-	uint16_t written_value = i2c_read_conversion(reg);
+	return 0;
+
 
 }
 
@@ -390,12 +388,14 @@ uint8_t VL53L4CD_API::I2C_WrByte(uint16_t reg, uint8_t value) //writing a single
 	data_write[2] = value;
 	long int r = write(fd_i2c,&data_write,3);
 	if(r < 0){
-		printf("%i",r);
+		printf("%ld",r);
 	#ifdef DEBUG
                 fprintf(stderr,"Could not read word from %02x. ret=%d.\n",address,r);
 	#endif
              throw "Could not read from i2c.";
 	}
+
+	return 0;
 
 
 }
